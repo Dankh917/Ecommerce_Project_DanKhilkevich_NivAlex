@@ -1,2 +1,2 @@
 # Ecommerce_Project_DanKhilkevich_NivAlex
-#project in c# OOP 
+#project in C# OOP 
