@@ -120,7 +120,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             for (int i = 0; i < this.shopping_cart.Length; i++)
             {
-                //currorder.
+                //currorder. im cooked asf my boi omwtfyb fasff
             } 
         }    
 
