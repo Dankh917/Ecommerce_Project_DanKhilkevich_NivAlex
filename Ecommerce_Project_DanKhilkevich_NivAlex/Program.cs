@@ -12,7 +12,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         //NIV ALEX 322822602
         static void Main(string[] args)
         {
-            
+            Console.WriteLine("hey niv");
+            Console.WriteLine("hey dan");
+            Console.WriteLine("hey daniel");
         }
     }
 }
