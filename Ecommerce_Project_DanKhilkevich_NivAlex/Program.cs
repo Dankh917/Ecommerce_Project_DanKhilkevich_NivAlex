@@ -13,6 +13,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         static void Main(string[] args)
         {
             Console.WriteLine("hey niv");
+            Console.WriteLine("hey dan");
         }
     }
 }
