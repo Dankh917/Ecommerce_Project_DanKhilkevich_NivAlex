@@ -143,7 +143,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public string PrintProduct2String()
         {
-            return ("product name: "+product_name+ "\nproduct  price: "+product_price+ "\nis special product: "+ is_special_product + "\npackaging fee: "+ packaging_fee+ "\ncatagory_of_product: "+catagory_of_product);
+            return $"Product Name: {product_name}\nProduct Price: {product_price}\nIs Special Product: {is_special_product}\nPackaging Fee: {packaging_fee}\nCategory of Product: {catagory_of_product}";
         }
     }
 

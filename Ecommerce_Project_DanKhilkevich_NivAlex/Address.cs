@@ -98,7 +98,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public string PrintAddress2String()
         {
-            return ("Street name : " + street_name + "\nNumber of building : "+number_of_building+"\nCity name: "+city_name+"\nCountry name : "+country_name);
+            return $"Street name: {street_name}, Number of building: {number_of_building}, City: {city_name}, Country: {country_name}";
         }
 
         

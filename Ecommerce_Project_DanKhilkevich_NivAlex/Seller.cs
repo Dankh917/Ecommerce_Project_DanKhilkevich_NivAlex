@@ -12,57 +12,88 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private string seller_password;
         private Address seller_address;
         private Product[] seller_products;
-        private int logi_size = 0;
+        private int logical_size = 0;
 
+        // Default constructor
+        public Seller()
+        {
+            // Initialize the seller products array with zero items
+            seller_products = new Product[0];
+        }
+        // Constructor to initialize the seller properties
+        public Seller(string seller_username, string seller_password, Address seller_address)
+        {
+            SetSellerUsername(seller_username);
+            SetSellerPassword(seller_password);
+            SetSellerAddress(seller_address);
+            // Initialize the seller products array with zero items
+            seller_products = new Product[0];
+        }
+        public Seller(Seller other)
+        {
+            this.seller_username = other.seller_username;
+            this.seller_password = other.seller_password;
+            // Creating a new Address object to avoid reference sharing
+            this.seller_address = new Address(other.seller_address);
+            // Copying the products array
+            this.seller_products = new Product[other.seller_products.Length];
+            Array.Copy(other.seller_products, this.seller_products, other.seller_products.Length);
+            this.logical_size = other.logical_size;
+        }
+
+        // Method to set the seller username
         public bool SetSellerUsername(string seller_username)
         {
             this.seller_username = seller_username;
-            return true;
+            return true; // Consider adding validation logic in the future
         }
 
+        // Method to set the seller password
         public bool SetSellerPassword(string seller_password)
         {
             this.seller_password = seller_password;
-            return true;
+            return true; // Consider adding validation logic in the future
         }
 
+        // Method to set the seller address
         public bool SetSellerAddress(Address seller_address)
         {
             this.seller_address = seller_address;
-            return true;
+            return true; // Consider adding validation logic in the future
         }
 
+        // Method to get the seller username
         public string GetSellerUsername()
         {
             return seller_username;
         }
 
+        // Method to get the seller password
         public string GetSellerPassword()
         {
             return seller_password;
         }
 
+        // Method to get the seller address
         public Address GetSellerAddress()
         {
             return seller_address;
         }
 
+        // Method to add a product to the seller's product list
         public void AddToProductList(Product product)
         {
-            if (logi_size < this.seller_products.Length)
+            // Check if the logical size exceeds the length of the product list
+            if (logical_size == seller_products.Length)
             {
-                this.seller_products[logi_size] = product;
-                logi_size++;
+                // Double the size of the product list
+                int newLength = seller_products.Length * 2;
+                Array.Resize(ref seller_products, newLength);
             }
-            else
-            {
-                Product[] temp = new Product[this.seller_products.Length * 2];
-                seller_products.CopyTo(temp, 0);
-                temp[logi_size] = product;
-                logi_size++;
-                this.seller_products = temp;
-            }
+
+            // Add the product to the end of the product list
+            seller_products[logical_size++] = product;
         }
-        
+
     }
 }
