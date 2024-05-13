@@ -117,7 +117,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             foreach (Seller existingSeller in store.GetSellerList())
             {
-                if (existingSeller.GetSellerUsername() == username)
+                if (existingSeller != null && existingSeller.GetSellerUsername() == username)
                 {
                     return true;
                 }

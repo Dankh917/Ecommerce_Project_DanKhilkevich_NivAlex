@@ -73,6 +73,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             if (sellers_array_logical_size == 0)
             {
                 sellerlist = new Seller[1];
+                sellers_array_physical__size = 1;
             }
             else if (sellers_array_logical_size == sellerlist.Length)
             {
@@ -80,6 +81,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Seller[] temp = new Seller[newSize];
                 sellerlist.CopyTo(temp, 0);
                 sellerlist = temp;
+                sellers_array_physical__size = newSize;
             }
 
             sellerlist[sellers_array_logical_size++] = seller;
@@ -98,10 +100,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     Console.WriteLine($"Address: {buyer.GetBuyerAddress().PrintAddress2String()}");
                     Console.WriteLine(); // Add an empty line for separation
                 }
-                else
-                {
-                    Console.WriteLine();
-                }
 
             }
             Console.WriteLine("The printing is completed.");
@@ -110,11 +108,17 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         // Method to print all sellers' details
         public void PrintSellersDetails()
         {
-            Console.WriteLine("Sellers Details:");
+            Console.WriteLine("Sellers array Details:");
+            Console.WriteLine($"Logical Size: {sellers_array_logical_size}, Physical Size: {sellers_array_physical__size}");
             foreach (Seller seller in sellerlist)
             {
-                Console.WriteLine($"Username: {seller.GetSellerUsername()}, Address: {seller.GetSellerAddress().PrintAddress2String()}");
+                if (seller != null)
+                {
+                    Console.WriteLine($"Username: {seller.GetSellerUsername()}, Address: {seller.GetSellerAddress().PrintAddress2String()}");
+                    Console.WriteLine(); // Add an empty line for separation
+                }
             }
+            Console.WriteLine("The printing is completed.");
         }
     }
 }
