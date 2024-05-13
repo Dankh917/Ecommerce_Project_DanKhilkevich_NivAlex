@@ -327,7 +327,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
 
             // Print the past purchases of the buyer
-            Console.WriteLine($"Past Purchases of Buyer: {buyer.GetBuyerUsername()}");
+            Console.WriteLine($"The Past Purchases of Buyer: {buyer.GetBuyerUsername()}");
             buyer.PrintPastPurchases();
         }
     }
