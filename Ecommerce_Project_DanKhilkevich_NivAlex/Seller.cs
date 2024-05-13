@@ -87,21 +87,23 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             if (physical_size == 0)
             {
                 seller_products = new Product[1];
+                physical_size = 1;
             }
             // Check if the logical size exceeds the length of the product list
-            if (logical_size == seller_products.Length)
+            if (logical_size == physical_size)
             {
                 // Double the size of the product list
-                int newLength = seller_products.Length * 2;
+                int newLength = physical_size * 2;
                 Product[] temp = new Product[newLength];
                 Array.Copy(seller_products, temp, logical_size);
                 seller_products = temp;
+                physical_size = newLength;
             }
 
             // Add the product to the end of the product list
             seller_products[logical_size++] = product;
         }
-    public bool SearchProductIfItExists(string name_of_product_to_find)
+        public bool SearchProductIfItExists(string name_of_product_to_find)
         {
             foreach (Product product in seller_products)
             {

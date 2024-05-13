@@ -75,16 +75,16 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 }
             }
         }
-        private static bool isBuyerAlreadyExists(string username)
+        public static bool isBuyerAlreadyExists(string username)
         {
-            foreach (Buyer existingBuyer in store.GetBuyerList())
+            foreach (Buyer buyer in store.GetBuyerList())
             {
-                if (existingBuyer.GetBuyerUsername() == username)
+                if (buyer != null && buyer.GetBuyerUsername() == username)
                 {
-                    return true;
+                    return true; // Buyer found with the specified username
                 }
             }
-            return false;
+            return false; // No buyer found with the specified username
         }
         static void AddBuyer()
         {

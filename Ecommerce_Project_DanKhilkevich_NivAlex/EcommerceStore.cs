@@ -12,8 +12,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private string name;
         private Buyer[] buyerlist;
         private Seller[] sellerlist;
-        private int buyer_logical_size = 0;
-        private int seller_logical_size = 0;
+        private int buyers_array_logical_size = 0;
+        private int buyers_array_physical_size = 0;
+        private int sellers_array_logical_size = 0;
+        private int sellers_array_physical__size = 0;
         // Default constructor
         public EcommerceStore(string name)
         {
@@ -43,29 +45,36 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         // Method to add a buyer to the store
         public void AddBuyerToStore(Buyer buyer)
         {
-            if (buyer_logical_size == 0)
+            if (buyer == null)
+            {
+                return; // If the buyer is null, do not proceed
+            }
+
+            if (buyers_array_logical_size == 0)
             {
                 buyerlist = new Buyer[1];
+                buyers_array_physical_size = 1;
             }
-            else if (buyer_logical_size == buyerlist.Length)
+            else if (buyers_array_logical_size == buyers_array_physical_size)
             {
                 int newSize = buyerlist.Length * 2;
                 Buyer[] temp = new Buyer[newSize];
                 buyerlist.CopyTo(temp, 0);
                 buyerlist = temp;
+                buyers_array_physical_size = newSize;
             }
 
-            buyerlist[buyer_logical_size++] = buyer;
+            buyerlist[buyers_array_logical_size++] = buyer;
         }
 
         // Method to add a seller to the store
         public void AddSellerToStore(Seller seller)
         {
-            if (seller_logical_size == 0)
+            if (sellers_array_logical_size == 0)
             {
                 sellerlist = new Seller[1];
             }
-            else if (seller_logical_size == sellerlist.Length)
+            else if (sellers_array_logical_size == sellerlist.Length)
             {
                 int newSize = sellerlist.Length * 2;
                 Seller[] temp = new Seller[newSize];
@@ -73,19 +82,29 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 sellerlist = temp;
             }
 
-            sellerlist[seller_logical_size++] = seller;
+            sellerlist[sellers_array_logical_size++] = seller;
         }
 
         // Method to print all buyers' details
         public void PrintBuyersDetails()
         {
-            Console.WriteLine("Buyers Details:");
+            Console.WriteLine("Buyers array Details:");
+            Console.WriteLine($"Logical Size: {buyers_array_logical_size}, Physical Size: {buyers_array_physical_size}");
             foreach (Buyer buyer in buyerlist)
             {
-                Console.WriteLine($"Username: {buyer.GetBuyerUsername()}");
-                Console.WriteLine($"Address: {buyer.GetBuyerAddress().PrintAddress2String()}");
-                Console.WriteLine(); // Add an empty line for separation
+                if (buyer != null)
+                {
+                    Console.WriteLine($"Username: {buyer.GetBuyerUsername()}");
+                    Console.WriteLine($"Address: {buyer.GetBuyerAddress().PrintAddress2String()}");
+                    Console.WriteLine(); // Add an empty line for separation
+                }
+                else
+                {
+                    Console.WriteLine();
+                }
+
             }
+            Console.WriteLine("The printing is completed.");
         }
 
         // Method to print all sellers' details
