@@ -128,6 +128,23 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return null; // Product not found
         }
+        public void PrintSellerProducts()
+        {
+            Console.WriteLine($"Seller: {seller_username}");
+            Console.WriteLine($"Logical Size: {logical_size}, Physical Size: {physical_size}");
+
+            if (logical_size == 0)
+            {
+                Console.WriteLine("Seller has no products.");
+                return;
+            }
+
+            Console.WriteLine("Seller Products:");
+            for (int i = 0; i < logical_size; i++)
+            {
+                Console.WriteLine($"Product {i + 1}: {seller_products[i].PrintProduct2String()}");
+            }
+        }
 
     }
 }

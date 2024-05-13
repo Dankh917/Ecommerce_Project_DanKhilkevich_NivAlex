@@ -26,8 +26,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("6. Print Buyers Details");
                 Console.WriteLine("7. Print Sellers Details");
                 Console.WriteLine("8. Print Buyer's Shopping Cart");
-                Console.WriteLine("9. View Past Purchases of a Buyer");
-                Console.WriteLine("10. Exit");
+                Console.WriteLine("9. Print Seller Products List");
+                Console.WriteLine("10. View Past Purchases of a Buyer");
+                Console.WriteLine("11. Exit");
 
                 Console.Write("Enter your choice: ");
                 int choice;
@@ -64,9 +65,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         PrintBuyerShoppingCart();
                         break;
                     case 9:
-                        ViewPastPurchases();
+                        PrintSellerProductsList();
                         break;
                     case 10:
+                        ViewPastPurchases();
+                        break;
+                    case 11:
                         exitRequested = true;
                         break;
                     default:
@@ -86,6 +90,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return false; // No buyer found with the specified username
         }
+
         static void AddBuyer()
         {
             Console.WriteLine("Enter buyer username:");
@@ -113,6 +118,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             store.AddBuyerToStore(buyer);
             Console.WriteLine("Buyer added successfully.");
         }
+
         private static bool isSellerAlreadyExists(string username)
         {
             foreach (Seller existingSeller in store.GetSellerList())
@@ -124,6 +130,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return false;
         }
+
         static void AddSeller()
         {
             Console.WriteLine("Enter seller username:");
@@ -150,6 +157,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             store.AddSellerToStore(seller);
             Console.WriteLine("Seller added successfully.");
         }
+
         static void AddProductToSeller()
         {
             Console.WriteLine("Enter seller username:");
@@ -198,6 +206,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return null;
         }
+
         public static Seller FindSellerByProduct(string productName)
         {
             // Iterate through the list of sellers and check if any of them sell the specified product
@@ -211,6 +220,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             return null; // Return null if no seller sells the product
         }
+
         static void AddProductToBuyersCart()
         {
             Console.WriteLine("Enter buyer username:");
@@ -250,6 +260,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             buyer.AddProductToShoppingCart(product);
             Console.WriteLine("Product added successfully to the buyer's cart.");
         }
+
         private static Buyer FindBuyerByUsername(string username)
         {
             foreach (Buyer buyer in store.GetBuyerList())
@@ -261,6 +272,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return null;
         }
+
         static void CheckoutForBuyer()
         {
             Console.WriteLine("Enter buyer username:");
@@ -296,6 +308,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             Console.WriteLine("Checkout completed successfully.");
         }
+
         public static void PrintBuyerShoppingCart()
         {
             Console.WriteLine("Enter buyer username:");
@@ -312,6 +325,24 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             buyer.PrintcurrentShoppingCart();
         }
+
+        public static void PrintSellerProductsList()
+        {
+            Console.WriteLine("Enter seller username:");
+            string username = Console.ReadLine();
+
+            // Find the buyer by username
+            Seller seller = FindSellerByUsername(username);
+
+            if (seller == null)
+            {
+                Console.WriteLine("Seller not found.");
+                return;
+            }
+
+            seller.PrintSellerProducts();
+        }
+
         static void ViewPastPurchases()
         {
             Console.WriteLine("Enter buyer username:");
