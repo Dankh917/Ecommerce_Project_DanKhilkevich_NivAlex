@@ -13,6 +13,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private Address seller_address;
         private Product[] seller_products;
         private int logical_size = 0;
+        private int physical_size = 0;
 
         // Default constructor
         public Seller()
@@ -83,16 +84,47 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         // Method to add a product to the seller's product list
         public void AddToProductList(Product product)
         {
+            if (physical_size == 0)
+            {
+                seller_products = new Product[1];
+            }
             // Check if the logical size exceeds the length of the product list
             if (logical_size == seller_products.Length)
             {
                 // Double the size of the product list
                 int newLength = seller_products.Length * 2;
-                Array.Resize(ref seller_products, newLength);
+                Product[] temp = new Product[newLength];
+                Array.Copy(seller_products, temp, logical_size);
+                seller_products = temp;
             }
 
             // Add the product to the end of the product list
             seller_products[logical_size++] = product;
+        }
+    public bool SearchProductIfItExists(string name_of_product_to_find)
+        {
+            foreach (Product product in seller_products)
+            {
+                // Assuming the Product class has a method to check if two products are the same
+                if (product.GetProductName()== name_of_product_to_find)
+                {
+                    // Return the product name if it exists in the seller's products array
+                    return true;
+                }
+            }
+            // Return null if the product does not exist in the seller's products array
+            return false;
+        }
+        public Product FindProductByName(string productName)
+        {
+            foreach (Product product in seller_products)
+            {
+                if (product != null && product.GetProductName().Equals(productName))
+                {
+                    return product;
+                }
+            }
+            return null; // Product not found
         }
 
     }

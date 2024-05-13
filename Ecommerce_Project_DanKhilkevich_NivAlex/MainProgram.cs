@@ -75,10 +75,29 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 }
             }
         }
+        private static bool isBuyerAlreadyExists(string username)
+        {
+            foreach (Buyer existingBuyer in store.GetBuyerList())
+            {
+                if (existingBuyer.GetBuyerUsername() == username)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         static void AddBuyer()
         {
             Console.WriteLine("Enter buyer username:");
             string username = Console.ReadLine();
+
+            // Check if buyer already exists
+            if (isBuyerAlreadyExists(username))
+            {
+                Console.WriteLine("Buyer with the same username already exists.");
+                return;
+            }
+
             Console.WriteLine("Enter buyer password:");
             string password = Console.ReadLine();
             Console.WriteLine("Enter street name:");
@@ -94,10 +113,28 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             store.AddBuyerToStore(buyer);
             Console.WriteLine("Buyer added successfully.");
         }
+        private static bool isSellerAlreadyExists(string username)
+        {
+            foreach (Seller existingSeller in store.GetSellerList())
+            {
+                if (existingSeller.GetSellerUsername() == username)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         static void AddSeller()
         {
             Console.WriteLine("Enter seller username:");
             string username = Console.ReadLine();
+            // Check if seller already exists
+            if (isSellerAlreadyExists(username))
+            {
+                Console.WriteLine("Seller with the same username already exists.");
+                return;
+            }
+
             Console.WriteLine("Enter seller password:");
             string password = Console.ReadLine();
             Console.WriteLine("Enter street name:");
@@ -161,6 +198,19 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return null;
         }
+        public static Seller FindSellerByProduct(string productName)
+        {
+            // Iterate through the list of sellers and check if any of them sell the specified product
+            foreach (Seller seller in store.GetSellerList())
+            {
+                if (seller.SearchProductIfItExists(productName)==true)
+                {
+                    return seller; // Return the seller if they sell the product
+                }
+            }
+
+            return null; // Return null if no seller sells the product
+        }
         static void AddProductToBuyersCart()
         {
             Console.WriteLine("Enter buyer username:");
@@ -177,13 +227,24 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             Console.WriteLine("Enter product name:");
             string productName = Console.ReadLine();
-            Console.WriteLine("Enter product price:");
-            int productPrice = int.Parse(Console.ReadLine());
-            Console.WriteLine("Enter category of product:");
-            string category = Console.ReadLine();
 
-            // Create a new product
-            Product product = new Product(productName, productPrice, false, 0, category);
+            // Check if there is a seller selling the product
+            Seller seller = FindSellerByProduct(productName);
+
+            if (seller == null)
+            {
+                Console.WriteLine("There is no seller selling this product.");
+                return;
+            }
+
+            // Retrieve product information from the seller's product list
+            Product product = seller.FindProductByName(productName);
+
+            if (product == null)
+            {
+                Console.WriteLine("Product not found.");
+                return;
+            }
 
             // Add the product to the buyer's cart
             buyer.AddProductToShoppingCart(product);
