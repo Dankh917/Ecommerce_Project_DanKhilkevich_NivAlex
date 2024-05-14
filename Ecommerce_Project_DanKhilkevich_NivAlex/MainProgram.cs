@@ -10,7 +10,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     {
         //DAN KHILKEVICH 212394274
         //NIV ALEX 322822602
-        static EcommerceStore store = new EcommerceStore("niv alex store");
+        static EcommerceStore store = new EcommerceStore("niv alex store");//need to check with mayaan
         static void Main(string[] args)
         {
             bool exitRequested = false;
@@ -30,7 +30,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("10. View Past Purchases of a Buyer");
                 Console.WriteLine("11. Exit");
 
-                Console.Write("Enter your choice: ");
+                Console.Write("\nEnter your choice: ");
                 int choice;
                 if (!int.TryParse(Console.ReadLine(), out choice))
                 {
@@ -77,6 +77,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         Console.WriteLine("Invalid choice. Please select a valid option.");
                         break;
                 }
+                Console.WriteLine();
             }
         }
         public static bool isBuyerAlreadyExists(string username)
@@ -93,7 +94,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         static void AddBuyer()
         {
-            Console.WriteLine("Enter buyer username:");
+            Console.Write("Enter buyer username:");
             string username = Console.ReadLine();
 
             // Check if buyer already exists
@@ -103,15 +104,15 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
-            Console.WriteLine("Enter buyer password:");
+            Console.Write("Enter buyer password:");
             string password = Console.ReadLine();
-            Console.WriteLine("Enter street name:");
+            Console.Write("Enter street name:");
             string street = Console.ReadLine();
-            Console.WriteLine("Enter building number:");
+            Console.Write("Enter building number:");
             int buildingNumber = int.Parse(Console.ReadLine());
-            Console.WriteLine("Enter city name:");
+            Console.Write("Enter city name:");
             string city = Console.ReadLine();
-            Console.WriteLine("Enter country name:");
+            Console.Write("Enter country name:");
             string country = Console.ReadLine();
 
             Buyer buyer = new Buyer(username, password, new Address(street, buildingNumber, city, country));
@@ -133,7 +134,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         static void AddSeller()
         {
-            Console.WriteLine("Enter seller username:");
+            Console.Write("Enter seller username:");
             string username = Console.ReadLine();
             // Check if seller already exists
             if (isSellerAlreadyExists(username))
@@ -142,20 +143,20 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
-            Console.WriteLine("Enter seller password:");
+            Console.Write("Enter seller password:");
             string password = Console.ReadLine();
-            Console.WriteLine("Enter street name:");
+            Console.Write("Enter street name:");
             string street = Console.ReadLine();
-            Console.WriteLine("Enter building number:");
+            Console.Write("Enter building number:");
             int buildingNumber = int.Parse(Console.ReadLine());
-            Console.WriteLine("Enter city name:");
+            Console.Write("Enter city name:");
             string city = Console.ReadLine();
-            Console.WriteLine("Enter country name:");
+            Console.Write("Enter country name:");
             string country = Console.ReadLine();
 
             Seller seller = new Seller(username, password, new Address(street, buildingNumber, city, country));
             store.AddSellerToStore(seller);
-            Console.WriteLine("Seller added successfully.");
+            Console.Write("Seller added successfully.\n");
         }
 
         static void AddProductToSeller()
@@ -184,7 +185,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("Enter packaging fee:");
                 packagingFee = int.Parse(Console.ReadLine());
             }
-            Console.WriteLine("Enter category of product:");
+            Console.WriteLine("Enter category of product(kids,electricty,office,clothing):");
             string category = Console.ReadLine();
 
             // Create a new product
@@ -214,7 +215,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 if (seller.SearchProductIfItExists(productName)==true)
                 {
-                    return seller; // Return the seller if they sell the product
+                    return seller; // Return the seller if they sell the product       //TO CHECK IF CAHNGE FUNC TO BOOL TYPE
                 }
             }
 

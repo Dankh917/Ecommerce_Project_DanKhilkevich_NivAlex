@@ -48,7 +48,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             while (true)
             {
                 if (SetCatagoryOfProduct(catagory_of_product) == true) { break; }
-                Console.WriteLine("please reenter packaging_fee: ");
+                Console.WriteLine("please reenter catagory: ");
                 catagory_of_product = (Console.ReadLine());
             }
 
@@ -97,7 +97,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return true;
             }
 
-            this.packaging_fee = 0;
+            this.packaging_fee = packaging_fee;
             return true;
         }
 

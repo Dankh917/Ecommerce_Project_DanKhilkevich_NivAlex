@@ -114,7 +114,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     return true;
                 }
             }
-            // Return null if the product does not exist in the seller's products array
+            // Return fasle if the product does not exist in the seller's products array
             return false;
         }
         public Product FindProductByName(string productName)
@@ -138,7 +138,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("Seller has no products.");
                 return;
             }
-
+            
             Console.WriteLine("Seller Products:");
             for (int i = 0; i < logical_size; i++)
             {
