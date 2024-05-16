@@ -123,6 +123,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             // Clear the shopping cart after purchase
             ClearShoppingCart();
         }
+
         public int CalculateTotalPrice()
         {
             int totalPrice = 0;
@@ -175,6 +176,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             for (int i = 0; i < cartSize; i++)
             {
                 Console.WriteLine($"Product {i + 1}: {shopping_cart[i].PrintProduct2String()}");
+                Console.WriteLine("--------------------------------------------");
             }
         }
         public void PrintPastPurchases()
