@@ -105,16 +105,18 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         }
         public bool SearchProductIfItExists(string name_of_product_to_find)
         {
+            if (seller_products == null)
+            {
+                return false;
+            }
+
             foreach (Product product in seller_products)
             {
-                // Assuming the Product class has a method to check if two products are the same
-                if (product.GetProductName()== name_of_product_to_find)
+                if (product != null && product.GetProductName() == name_of_product_to_find)
                 {
-                    // Return the product name if it exists in the seller's products array
                     return true;
                 }
             }
-            // Return fasle if the product does not exist in the seller's products array
             return false;
         }
         public Product FindProductByName(string productName)

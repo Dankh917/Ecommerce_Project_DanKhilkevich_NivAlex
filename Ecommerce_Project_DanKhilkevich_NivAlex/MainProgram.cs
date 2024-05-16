@@ -10,9 +10,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     {
         //DAN KHILKEVICH 212394274
         //NIV ALEX 322822602
-        static EcommerceStore store = new EcommerceStore("niv alex store");//need to check with mayaan
         static void Main(string[] args)
         {
+            EcommerceStore store = new EcommerceStore("niv and dan store");
             bool exitRequested = false;
 
             while (!exitRequested)
@@ -31,8 +31,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("11. Exit");
 
                 Console.Write("\nEnter your choice: ");
-                int choice;
-                if (!int.TryParse(Console.ReadLine(), out choice))
+                if (!int.TryParse(Console.ReadLine(), out int choice))
                 {
                     Console.WriteLine("Invalid choice. Please enter a number.");
                     continue;
@@ -41,19 +40,19 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 switch (choice)
                 {
                     case 1:
-                        AddBuyer();
+                        store.AddBuyer();
                         break;
                     case 2:
-                        AddSeller();
+                        store.AddSeller();
                         break;
                     case 3:
-                        AddProductToSeller();
+                        store.AddProductToSeller();
                         break;
                     case 4:
-                        AddProductToBuyersCart();
+                        store.AddProductToBuyersCart();
                         break;
                     case 5:
-                        CheckoutForBuyer();
+                        store.CheckoutForBuyer();
                         break;
                     case 6:
                         store.PrintBuyersDetails();
@@ -62,13 +61,13 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         store.PrintSellersDetails();
                         break;
                     case 8:
-                        PrintBuyerShoppingCart();
+                        store.PrintBuyerShoppingCart();
                         break;
                     case 9:
-                        PrintSellerProductsList();
+                        store.PrintSellerProductsList();
                         break;
                     case 10:
-                        ViewPastPurchases();
+                        store.ViewPastPurchases();
                         break;
                     case 11:
                         exitRequested = true;
@@ -79,288 +78,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 }
                 Console.WriteLine();
             }
-        }
-        public static bool isBuyerAlreadyExists(string username)
-        {
-            foreach (Buyer buyer in store.GetBuyerList())
-            {
-                if (buyer != null && buyer.GetBuyerUsername() == username)
-                {
-                    return true; // Buyer found with the specified username
-                }
-            }
-            return false; // No buyer found with the specified username
-        }
-
-        static void AddBuyer()
-        {
-            Console.Write("Enter buyer username:");
-            string username = Console.ReadLine();
-
-            // Check if buyer already exists
-            if (isBuyerAlreadyExists(username))
-            {
-                Console.WriteLine("Buyer with the same username already exists.");
-                return;
-            }
-
-            Console.Write("Enter buyer password:");
-            string password = Console.ReadLine();
-            Console.Write("Enter street name:");
-            string street = Console.ReadLine();
-            Console.Write("Enter building number:");
-            int buildingNumber = int.Parse(Console.ReadLine());
-            Console.Write("Enter city name:");
-            string city = Console.ReadLine();
-            Console.Write("Enter country name:");
-            string country = Console.ReadLine();
-
-            Buyer buyer = new Buyer(username, password, new Address(street, buildingNumber, city, country));
-            store.AddBuyerToStore(buyer);
-            Console.WriteLine("Buyer added successfully.");
-        }
-
-        private static bool isSellerAlreadyExists(string username)
-        {
-            foreach (Seller existingSeller in store.GetSellerList())
-            {
-                if (existingSeller != null && existingSeller.GetSellerUsername() == username)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        static void AddSeller()
-        {
-            Console.Write("Enter seller username:");
-            string username = Console.ReadLine();
-            // Check if seller already exists
-            if (isSellerAlreadyExists(username))
-            {
-                Console.WriteLine("Seller with the same username already exists.");
-                return;
-            }
-
-            Console.Write("Enter seller password:");
-            string password = Console.ReadLine();
-            Console.Write("Enter street name:");
-            string street = Console.ReadLine();
-            Console.Write("Enter building number:");
-            int buildingNumber = int.Parse(Console.ReadLine());
-            Console.Write("Enter city name:");
-            string city = Console.ReadLine();
-            Console.Write("Enter country name:");
-            string country = Console.ReadLine();
-
-            Seller seller = new Seller(username, password, new Address(street, buildingNumber, city, country));
-            store.AddSellerToStore(seller);
-            Console.Write("Seller added successfully.\n");
-        }
-
-        static void AddProductToSeller()
-        {
-            Console.WriteLine("Enter seller username:");
-            string username = Console.ReadLine();
-
-            // Find the seller by username
-            Seller seller = FindSellerByUsername(username);
-
-            if (seller == null)
-            {
-                Console.WriteLine("Seller not found.");
-                return;
-            }
-
-            Console.WriteLine("Enter product name:");
-            string productName = Console.ReadLine();
-            Console.WriteLine("Enter product price:");
-            int productPrice = int.Parse(Console.ReadLine());
-            Console.WriteLine("Is it a special product? (true/false):");
-            bool isSpecialProduct = bool.Parse(Console.ReadLine());
-            int packagingFee = 0;
-            if (isSpecialProduct)
-            {
-                Console.WriteLine("Enter packaging fee:");
-                packagingFee = int.Parse(Console.ReadLine());
-            }
-            Console.WriteLine("Enter category of product(kids,electricty,office,clothing):");
-            string category = Console.ReadLine();
-
-            // Create a new product
-            Product product = new Product(productName, productPrice, isSpecialProduct, packagingFee, category);
-
-            // Add the product to the seller's product list
-            seller.AddToProductList(product);
-            Console.WriteLine("Product added successfully to the seller.");
-        }
-
-        static Seller FindSellerByUsername(string username)
-        {
-            foreach (Seller seller in store.GetSellerList())
-            {
-                if (seller.GetSellerUsername() == username)
-                {
-                    return seller;
-                }
-            }
-            return null;
-        }
-
-        public static Seller FindSellerByProduct(string productName)
-        {
-            // Iterate through the list of sellers and check if any of them sell the specified product
-            foreach (Seller seller in store.GetSellerList())
-            {
-                if (seller.SearchProductIfItExists(productName)==true)
-                {
-                    return seller; // Return the seller if they sell the product       //TO CHECK IF CAHNGE FUNC TO BOOL TYPE
-                }
-            }
-
-            return null; // Return null if no seller sells the product
-        }
-
-        static void AddProductToBuyersCart()
-        {
-            Console.WriteLine("Enter buyer username:");
-            string username = Console.ReadLine();
-
-            // Find the buyer by username
-            Buyer buyer = FindBuyerByUsername(username);
-
-            if (buyer == null)
-            {
-                Console.WriteLine("Buyer not found.");
-                return;
-            }
-
-            Console.WriteLine("Enter product name:");
-            string productName = Console.ReadLine();
-
-            // Check if there is a seller selling the product
-            Seller seller = FindSellerByProduct(productName);
-
-            if (seller == null)
-            {
-                Console.WriteLine("There is no seller selling this product.");
-                return;
-            }
-
-            // Retrieve product information from the seller's product list
-            Product product = seller.FindProductByName(productName);
-
-            if (product == null)
-            {
-                Console.WriteLine("Product not found.");
-                return;
-            }
-
-            // Add the product to the buyer's cart
-            buyer.AddProductToShoppingCart(product);
-            Console.WriteLine("Product added successfully to the buyer's cart.");
-        }
-
-        private static Buyer FindBuyerByUsername(string username)
-        {
-            foreach (Buyer buyer in store.GetBuyerList())
-            {
-                if (buyer.GetBuyerUsername() == username)
-                {
-                    return buyer;
-                }
-            }
-            return null;
-        }
-
-        static void CheckoutForBuyer()
-        {
-            Console.WriteLine("Enter buyer username:");
-            string username = Console.ReadLine();
-
-            // Find the buyer by username
-            Buyer buyer = FindBuyerByUsername(username);
-
-            if (buyer == null)
-            {
-                Console.WriteLine("Buyer not found.");
-                return;
-            }
-
-            // Display the buyer's shopping cart
-            Console.WriteLine("Buyer's Shopping Cart:");
-            foreach (Product product in buyer.GetShoppingCart())
-            {
-                if (product != null)
-                {
-                    Console.WriteLine(product.PrintProduct2String());
-                }
-            }
-
-            // Calculate the total price of the items in the shopping cart
-            int totalPrice = buyer.CalculateTotalPrice();
-
-            // Display the total price
-            Console.WriteLine($"Total Price: {totalPrice}");
-
-            // Proceed with the payment by buying the shopping cart
-            buyer.BuyTheShoppingCart();
-
-            Console.WriteLine("Checkout completed successfully.");
-        }
-
-        public static void PrintBuyerShoppingCart()
-        {
-            Console.WriteLine("Enter buyer username:");
-            string username = Console.ReadLine();
-
-            // Find the buyer by username
-            Buyer buyer = FindBuyerByUsername(username);
-
-            if (buyer == null)
-            {
-                Console.WriteLine("Buyer not found.");
-                return;
-            }
-
-            buyer.PrintcurrentShoppingCart();
-        }
-
-        public static void PrintSellerProductsList()
-        {
-            Console.WriteLine("Enter seller username:");
-            string username = Console.ReadLine();
-
-            // Find the buyer by username
-            Seller seller = FindSellerByUsername(username);
-
-            if (seller == null)
-            {
-                Console.WriteLine("Seller not found.");
-                return;
-            }
-
-            seller.PrintSellerProducts();
-        }
-
-        static void ViewPastPurchases()
-        {
-            Console.WriteLine("Enter buyer username:");
-            string username = Console.ReadLine();
-
-            // Find the buyer by username
-            Buyer buyer = FindBuyerByUsername(username);
-
-            if (buyer == null)
-            {
-                Console.WriteLine("Buyer not found.");
-                return;
-            }
-
-            // Print the past purchases of the buyer
-            Console.WriteLine($"The Past Purchases of Buyer: {buyer.GetBuyerUsername()}");
-            buyer.PrintPastPurchases();
         }
     }
 }
