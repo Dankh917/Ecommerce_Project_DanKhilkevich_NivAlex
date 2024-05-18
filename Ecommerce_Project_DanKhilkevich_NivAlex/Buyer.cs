@@ -136,6 +136,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 if (product != null)
                 {
                     totalPrice += product.GetProductPrice();
+                    if (product.GetIsSpecialProduct())
+                    {
+                        totalPrice += product.GetPackagingFee();
+                    }
                 }
             }
 

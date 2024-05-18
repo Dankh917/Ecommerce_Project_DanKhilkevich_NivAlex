@@ -71,25 +71,19 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return true;
         }
 
-        public bool SetProductPrice(int product_price)//1
+        public bool SetProductPrice(int product_price)
         {
             this.product_price = product_price; 
             return true;
         }
 
-        public bool SetIsSpecialProduct(bool is_special_product)//must come after SetProductPrice in constructur//3
+        public bool SetIsSpecialProduct(bool is_special_product)
         {
             this.is_special_product = is_special_product;
-
-            if (this.is_special_product==true) 
-            {
-                this.product_price = this.product_price + this.packaging_fee;
-            }
-
             return true;
         }
 
-        public bool SetPackagingFee(int packaging_fee)//2
+        public bool SetPackagingFee(int packaging_fee)
         {
             if(is_special_product == true)
             {

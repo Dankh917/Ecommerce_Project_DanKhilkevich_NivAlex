@@ -74,36 +74,36 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
                     
                     case 3://Add Product to Seller
-                        Console.WriteLine("Enter seller username:");
+                        Console.Write("Enter seller username:");
                         string username = Console.ReadLine();
-                        Console.WriteLine("Enter product name:");
+                        Console.Write("Enter product name:");
                         string productName = Console.ReadLine();
-                        Console.WriteLine("Enter product price:");
+                        Console.Write("Enter product price:");
                         int productPrice = int.Parse(Console.ReadLine());
-                        Console.WriteLine("Is it a special product? (true/false):");
+                        Console.Write("Is it a special product? (true/false):");
                         bool isSpecialProduct = bool.Parse(Console.ReadLine());
                         int packagingFee = 0;
                         if (isSpecialProduct)
                         {
-                            Console.WriteLine("Enter packaging fee:");
+                            Console.Write("Enter packaging fee:");
                             packagingFee = int.Parse(Console.ReadLine());
                         }
-                        Console.WriteLine("Enter category of product (kids, electricity, office, clothing):");
+                        Console.Write("Enter category of product (kids, electricity, office, clothing):");
                         string category = Console.ReadLine();
                         store.AddProductToSeller(username, productName, productPrice, isSpecialProduct, packagingFee, category);
                         break;
                     
                     
                     case 4: //Add Product to buyer Cart 
-                        Console.WriteLine("Enter buyer username:");
+                        Console.Write("Enter buyer username:");
                         string add_product_username = Console.ReadLine();
-                        Console.WriteLine("Enter product name:");
+                        Console.Write("Enter product name:");
                         string add_product_productName = Console.ReadLine();
                         store.AddProductToBuyersCart(add_product_username, add_product_productName);
                         break;
 
                     case 5: //Checkout For Buyer
-                        Console.WriteLine("Enter buyer username:");
+                        Console.Write("Enter buyer username:");
                         string buyer_chackout_username = Console.ReadLine();
                         store.CheckoutForBuyer(buyer_chackout_username);
                         break;
@@ -118,19 +118,19 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         break;
                     
                     case 8: //Print specific Buyer Shopping Cart
-                        Console.WriteLine("Enter buyer username:");
+                        Console.Write("Enter buyer username:");
                         string print_buyer_shppoing_cart_username = Console.ReadLine();
                         store.PrintBuyerShoppingCart(print_buyer_shppoing_cart_username);
                         break;
                     
                     case 9: //Print specific Seller Product list 
-                        Console.WriteLine("Enter seller username:");
+                        Console.Write("Enter seller username:");
                         string print_seller_product_list_username = Console.ReadLine();
                         store.PrintSellerProductsList(print_seller_product_list_username);
                         break;
                     
                     case 10: //Print last Purchases of user
-                        Console.WriteLine("Enter buyer username:");
+                        Console.Write("Enter buyer username:");
                         string last_purchases_username = Console.ReadLine();
                         store.ViewPastPurchases(last_purchases_username);
                         break;
@@ -140,7 +140,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         break;
 
                     default:
-                        Console.WriteLine("Invalid choice. Please select a valid option.");
+                        Console.Write("Invalid choice. Please select a valid option.");
                         break;
                 }
                 Console.WriteLine();

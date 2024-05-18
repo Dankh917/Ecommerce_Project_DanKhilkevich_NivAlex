@@ -67,6 +67,11 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             // Update the total price
             total_price += product.GetProductPrice();
+            // If the product is a special product, we add the packaging fee to the total price
+            if (product.GetIsSpecialProduct())
+            {
+                total_price += product.GetPackagingFee();
+            }
         }
 
     }
