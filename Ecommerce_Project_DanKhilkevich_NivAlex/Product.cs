@@ -15,7 +15,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private string catagory_of_product;
         private string[] list_catagory = { "kids", "electricity", "office", "clothing" };
 
-        public Product(string product_name, int product_price, bool is_special_product,int packaging_fee,string catagory_of_product) 
+        public Product(string product_name, int product_price, bool is_special_product,int packaging_fee,string catagory_of_product) //product constructor
         {
             while (true)
             {
@@ -55,7 +55,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         }
 
-        public Product(Product other)
+        public Product(Product other) // copy constructor
         {
             this.product_name = other.product_name;
             this.product_price = other.product_price;
@@ -131,6 +131,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             return this.is_special_product;
         }
+
         public int GetPackagingFee()
         {
             return this.packaging_fee;
@@ -141,7 +142,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return this.catagory_of_product;
         }
 
-        public string PrintProduct2String()
+        public string PrintProductToString()
         {
             return $"Product Name: {product_name}\nProduct Price: {product_price}\nIs Special Product: {is_special_product}\nPackaging Fee: {packaging_fee}\nCategory of Product: {catagory_of_product}";
         }

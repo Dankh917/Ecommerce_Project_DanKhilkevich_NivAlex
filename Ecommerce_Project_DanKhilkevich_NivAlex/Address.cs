@@ -13,7 +13,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private string city_name;
         private string country_name;
 
-        public Address(string street_name, int number_of_building, string city_name, string country_name)
+        public Address(string street_name, int number_of_building, string city_name, string country_name) //address constructor
         {
             while (true)
             {
@@ -49,7 +49,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         }
 
-        public Address(Address other)
+        public Address(Address other) //copy constructor
         {
             street_name=other.street_name;
             number_of_building=other.number_of_building;
@@ -96,7 +96,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return this.country_name;
         }
 
-        public string PrintAddress2String()
+        public string PrintAddressToString()
         {
             return $"Street name: {street_name}, Number of building: {number_of_building}, City: {city_name}, Country: {country_name}";
         }

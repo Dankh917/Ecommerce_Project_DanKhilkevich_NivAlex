@@ -11,10 +11,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private Product[] product_list;
         private int total_price;
         private Buyer buyer_details;
-        private int itemCount; // To keep track of the number of products in the order
+        private int itemCount; // to keep track of the number of products in the order
         private int physicalSize;
 
-        public Order(Buyer buyer_details)
+        public Order(Buyer buyer_details) //order constructor
         {
             this.buyer_details = buyer_details;
             product_list = new Product[0];
@@ -22,14 +22,17 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             itemCount = 0;
             physicalSize = 0;
         }
+
         public Buyer GetBuyerDetails()
         {
             return buyer_details;
         }
+
         public int GetTotalPrice()
         {
             return total_price;
         }
+
         public Product[] GetProductList()
         {
             // Create a new array to hold only the products added to the order

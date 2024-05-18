@@ -15,13 +15,14 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private int logical_size = 0;
         private int physical_size = 0;
 
-        // Default constructor
+        // seller constructor
         public Seller()
         {
             // Initialize the seller products array with zero items
             seller_products = new Product[0];
         }
         // Constructor to initialize the seller properties
+
         public Seller(string seller_username, string seller_password, Address seller_address)
         {
             SetSellerUsername(seller_username);
@@ -30,7 +31,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             // Initialize the seller products array with zero items
             seller_products = new Product[0];
         }
-        public Seller(Seller other)
+
+        public Seller(Seller other) //copy constructor
         {
             this.seller_username = other.seller_username;
             this.seller_password = other.seller_password;
@@ -42,46 +44,43 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             this.logical_size = other.logical_size;
         }
 
-        // Method to set the seller username
         public bool SetSellerUsername(string seller_username)
         {
             this.seller_username = seller_username;
-            return true; // Consider adding validation logic in the future
+            return true; //adding validation logic in the future
         }
 
-        // Method to set the seller password
         public bool SetSellerPassword(string seller_password)
         {
-            this.seller_password = seller_password;
-            return true; // Consider adding validation logic in the future
+            this.seller_password = seller_password; 
+            return true; //adding validation logic in the future
         }
 
-        // Method to set the seller address
         public bool SetSellerAddress(Address seller_address)
         {
             this.seller_address = seller_address;
-            return true; // Consider adding validation logic in the future
+            return true; // adding validation logic in the future
         }
 
-        // Method to get the seller username
         public string GetSellerUsername()
         {
-            return seller_username;
+            return seller_username; 
         }
 
-        // Method to get the seller password
+
         public string GetSellerPassword()
         {
             return seller_password;
         }
 
-        // Method to get the seller address
+
         public Address GetSellerAddress()
         {
             return seller_address;
         }
 
-        // Method to add a product to the seller's product list
+
+        // function to add a product to the seller's product list
         public void AddToProductList(Product product)
         {
             if (physical_size == 0)
@@ -103,6 +102,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             // Add the product to the end of the product list
             seller_products[logical_size++] = product;
         }
+
         public bool SearchProductIfItExists(string name_of_product_to_find)
         {
             if (seller_products == null)
@@ -119,6 +119,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return false;
         }
+
         public Product FindProductByName(string productName)
         {
             foreach (Product product in seller_products)
@@ -130,6 +131,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             return null; // Product not found
         }
+
         public void PrintSellerProducts()
         {
             Console.WriteLine($"Seller: {seller_username}");
@@ -144,7 +146,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Console.WriteLine("Seller Products:");
             for (int i = 0; i < logical_size; i++)
             {
-                Console.WriteLine($"Product {i + 1}: {seller_products[i].PrintProduct2String()}");
+                Console.WriteLine($"Product {i + 1}: {seller_products[i].PrintProductToString()}");
             }
         }
 

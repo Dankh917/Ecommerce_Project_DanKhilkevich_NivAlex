@@ -19,7 +19,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private int cartSize = 0;
 
 
-        public Buyer(string buyer_username, string buyer_password, Address buyer_address) 
+        public Buyer(string buyer_username, string buyer_password, Address buyer_address) //buyer constructor
         {
             SetBuyerUsername(buyer_username);
             SetBuyerPassword(buyer_password);
@@ -30,7 +30,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             past_purchases_physicalSize = 0;
         }
 
-        public Buyer(Buyer other)
+        public Buyer(Buyer other) //copy constructor
         {
             buyer_username = other.buyer_username;
             buyer_password = other.buyer_password;
@@ -85,7 +85,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return this.past_purchases;
         }
 
-        public void AddProductToShoppingCart(Product product)
+        // AddProductToShoppingCart function received product and add the product to the buyer ShoppingCart
+        public void AddProductToShoppingCart(Product product) 
         {
             if (cartSize == 0)
             {
@@ -102,6 +103,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             shopping_cart[cartSize++] = product;
         }
 
+        // BuyTheShoppingCart function create new order from current products list, add it to PastPurchases and clear the ShoppingCart 
         public void BuyTheShoppingCart()
         {
             // Create a new order
@@ -128,7 +130,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             int totalPrice = 0;
 
-            // Iterate through the shopping cart and sum up the prices of all products
+            // Iterate over the shopping cart and sum up the prices of all products
             foreach (Product product in shopping_cart)
             {
                 if (product != null)
@@ -150,7 +152,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             else if (past_purchases_logical_size == past_purchases_physicalSize)
             {
-                // Double the size of the past purchases array if it's full
+                // Double the size of the past purchases array if it full
                 int newSize = past_purchases_physicalSize * 2;
                 Order[] temp = new Order[newSize];
                 Array.Copy(past_purchases, temp, past_purchases_logical_size);
@@ -175,7 +177,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Console.WriteLine($"Logical Size: {cartSize}, Physical Size: {shopping_cart.Length}");
             for (int i = 0; i < cartSize; i++)
             {
-                Console.WriteLine($"Product {i + 1}: {shopping_cart[i].PrintProduct2String()}");
+                Console.WriteLine($"Product {i + 1}: {shopping_cart[i].PrintProductToString()}");
                 Console.WriteLine("--------------------------------------------");
             }
         }
@@ -194,12 +196,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 Console.WriteLine($"Order {orderNumber}:");
                 Console.WriteLine("Buyer Details:");
-                Console.WriteLine($"Username: {order.GetBuyerDetails().GetBuyerUsername()}, Address: {order.GetBuyerDetails().GetBuyerAddress().PrintAddress2String()}");
+                Console.WriteLine($"Username: {order.GetBuyerDetails().GetBuyerUsername()}, Address: {order.GetBuyerDetails().GetBuyerAddress().PrintAddressToString()}");
                 Console.WriteLine("Products:");
 
                 foreach (Product product in order.GetProductList())
                 {
-                    Console.WriteLine(product.PrintProduct2String());
+                    Console.WriteLine(product.PrintProductToString());
                 }
 
                 Console.WriteLine($"Total Price: {order.GetTotalPrice()}");
