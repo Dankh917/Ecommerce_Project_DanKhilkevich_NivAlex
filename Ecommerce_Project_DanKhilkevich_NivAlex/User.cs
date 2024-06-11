@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
-    internal class User
+    abstract internal class User
     {
         protected string username;
         protected string password;
