@@ -7,72 +7,30 @@ using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
-    internal class Buyer
+    internal class Buyer : User
     {
-        private string buyer_username;
-        private string buyer_password;
-        private Address buyer_address;
-        private Product[] shopping_cart;
+        private Product[] shopping_cart; //products array, each product can be regular or special (polymorphism principle)
         private Order[] past_purchases;
         private int past_purchases_logical_size = 0;
         private int past_purchases_physicalSize = 0;
         private int cartSize = 0;
 
 
-        public Buyer(string buyer_username, string buyer_password, Address buyer_address) //buyer constructor
+        public Buyer(string buyer_username, string buyer_password, Address buyer_address) : base(buyer_username, buyer_password, buyer_address) //buyer constructor
         {
-            SetBuyerUsername(buyer_username);
-            SetBuyerPassword(buyer_password);
-            SetBuyerAddress(buyer_address);
             shopping_cart = new Product[0]; // Initialize as an empty array
             past_purchases = new Order[0]; // Initialize as an empty array
             past_purchases_logical_size = 0;
             past_purchases_physicalSize = 0;
         }
 
-        public Buyer(Buyer other) //copy constructor
+        public Buyer(Buyer other) : base(other.GetUsername(), other.GetPassword(), other.GetAddress()) //copy constructor
         {
-            buyer_username = other.buyer_username;
-            buyer_password = other.buyer_password;
-            buyer_address = new Address(other.buyer_address); // assuming Address has a copy constructor
             shopping_cart = new Product[other.shopping_cart.Length];
             Array.Copy(other.shopping_cart, shopping_cart, other.shopping_cart.Length);
             past_purchases = new Order[other.past_purchases.Length];
             Array.Copy(other.past_purchases, past_purchases, other.past_purchases.Length);
             cartSize = other.cartSize;
-        }
-
-        public bool SetBuyerUsername(string buyer_username)
-        {
-            this.buyer_username = buyer_username;
-            return true;
-        }
-
-        public bool SetBuyerPassword(string buyer_password)
-        {
-            this.buyer_password = buyer_password;
-            return true;
-        }
-
-        public bool SetBuyerAddress(Address buyer_address)
-        {
-            this.buyer_address = buyer_address;
-            return true;
-        }
-
-        public string GetBuyerUsername()
-        {
-            return this.buyer_username;
-        }
-
-        public string GetBuyerpassword()
-        {
-            return this.buyer_password;
-        }
-
-        public Address GetBuyerAddress()
-        {
-            return this.buyer_address;
         }
 
         public Product[] GetShoppingCart()
@@ -136,9 +94,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 if (product != null)
                 {
                     totalPrice += product.GetProductPrice();
-                    if (product.GetIsSpecialProduct())
+                    if (product is SpecialProduct specialProduct)
                     {
-                        totalPrice += product.GetPackagingFee();
+                        totalPrice += specialProduct.GetPackagingFee();
                     }
                 }
             }
@@ -181,7 +139,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Console.WriteLine($"Logical Size: {cartSize}, Physical Size: {shopping_cart.Length}");
             for (int i = 0; i < cartSize; i++)
             {
-                Console.WriteLine($"Product {i + 1}: {shopping_cart[i].PrintProductToString()}");
+                Console.WriteLine($"Product {i + 1}: {shopping_cart[i].ToString()}");
                 Console.WriteLine("--------------------------------------------");
             }
         }
@@ -200,12 +158,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 Console.WriteLine($"Order {orderNumber}:");
                 Console.WriteLine("Buyer Details:");
-                Console.WriteLine($"Username: {order.GetBuyerDetails().GetBuyerUsername()}, Address: {order.GetBuyerDetails().GetBuyerAddress().PrintAddressToString()}");
+                Console.WriteLine(order.GetBuyerDetails().ToString()); // Using UserToString from User class
                 Console.WriteLine("Products:");
 
                 foreach (Product product in order.GetProductList())
                 {
-                    Console.WriteLine(product.PrintProductToString());
+                    Console.WriteLine(product.ToString());
                 }
 
                 Console.WriteLine($"Total Price: {order.GetTotalPrice()}");

@@ -6,83 +6,52 @@ using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
-    internal class Seller
+    internal class Seller : User
     {
-        private string seller_username;
-        private string seller_password;
-        private Address seller_address;
-        private Product[] seller_products;
+        private Product[] seller_products; //products array, each product can be regular or special (polymorphism principle)
         private int logical_size = 0;
         private int physical_size = 0;
 
         // seller constructor
-        public Seller()
+        public Seller() : base()
         {
             // Initialize the seller products array with zero items
             seller_products = new Product[0];
         }
+
         // Constructor to initialize the seller properties
-
-        public Seller(string seller_username, string seller_password, Address seller_address)
+        public Seller(string seller_username, string seller_password, Address seller_address) : base(seller_username, seller_password, seller_address)
         {
-            SetSellerUsername(seller_username);
-            SetSellerPassword(seller_password);
-            SetSellerAddress(seller_address);
-            // Initialize the seller products array with zero items
             seller_products = new Product[0];
         }
 
-        public Seller(Seller other) //copy constructor
+        public Seller(Seller other) : base(other.GetUsername(), other.GetPassword(), other.GetAddress()) //copy constructor
         {
-            this.seller_username = other.seller_username;
-            this.seller_password = other.seller_password;
-            // Creating a new Address object to avoid reference sharing
-            this.seller_address = new Address(other.seller_address);
-            // Copying the products array
             this.seller_products = new Product[other.seller_products.Length];
             Array.Copy(other.seller_products, this.seller_products, other.seller_products.Length);
             this.logical_size = other.logical_size;
         }
-
-        public bool SetSellerUsername(string seller_username)
+        // function to get the list of products
+        public Product[] GetSellerProductList()
         {
-            this.seller_username = seller_username;
-            return true; //adding validation logic in the future
-        }
-
-        public bool SetSellerPassword(string seller_password)
-        {
-            this.seller_password = seller_password; 
-            return true; //adding validation logic in the future
-        }
-
-        public bool SetSellerAddress(Address seller_address)
-        {
-            this.seller_address = seller_address;
-            return true; // adding validation logic in the future
-        }
-
-        public string GetSellerUsername()
-        {
-            return seller_username; 
-        }
-
-
-        public string GetSellerPassword()
-        {
-            return seller_password;
-        }
-
-
-        public Address GetSellerAddress()
-        {
-            return seller_address;
+            Product[] products = new Product[logical_size];
+            Array.Copy(seller_products, products, logical_size);
+            return products;
         }
 
 
         // function to add a product to the seller's product list
         public void AddToProductList(Product product)
         {
+            // Check if the product already exists in the seller's product list
+            foreach (Product existingProduct in seller_products)
+            {
+                if (existingProduct != null && existingProduct.Equals(product))
+                {
+                    Console.WriteLine("Product already exists in the seller's product list.");
+                    return;
+                }
+            }
             if (physical_size == 0)
             {
                 seller_products = new Product[1];
@@ -101,6 +70,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             // Add the product to the end of the product list
             seller_products[logical_size++] = product;
+            Console.WriteLine("Product added successfully to the seller.");
         }
 
         public bool SearchProductIfItExists(string name_of_product_to_find)
@@ -134,9 +104,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public void PrintSellerProducts()
         {
-            Console.WriteLine($"Seller: {seller_username}");
+            Console.WriteLine(ToString());
             Console.WriteLine($"Logical Size: {logical_size}, Physical Size: {physical_size}");
-
             if (logical_size == 0)
             {
                 Console.WriteLine("Seller has no products.");
@@ -146,7 +115,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Console.WriteLine("Seller Products:");
             for (int i = 0; i < logical_size; i++)
             {
-                Console.WriteLine($"Product {i + 1}: {seller_products[i].PrintProductToString()}");
+                Console.WriteLine($"{seller_products[i].ToString()}");
+                Console.WriteLine("-------------------");
             }
         }
 

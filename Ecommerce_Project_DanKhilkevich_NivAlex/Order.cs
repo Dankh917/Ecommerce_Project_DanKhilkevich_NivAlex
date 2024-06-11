@@ -8,7 +8,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
     internal class Order
     {
-        private Product[] product_list;
+        private Product[] product_list; //products array, each product can be regular or special (polymorphism principle)
         private int total_price;
         private Buyer buyer_details;
         private int itemCount; // to keep track of the number of products in the order
@@ -67,10 +67,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             // Update the total price
             total_price += product.GetProductPrice();
-            // If the product is a special product, we add the packaging fee to the total price
-            if (product.GetIsSpecialProduct())
+            // If the product is a special product, add the packaging fee to the total price
+            if (product is SpecialProduct specialProduct)
             {
-                total_price += product.GetPackagingFee();
+                total_price += specialProduct.GetPackagingFee();
             }
         }
 

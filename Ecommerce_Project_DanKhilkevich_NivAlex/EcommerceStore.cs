@@ -4,34 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static Ecommerce_Project_DanKhilkevich_NivAlex.Product;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
     internal class EcommerceStore
     {
         private string name;
-        private Buyer[] buyerlist;
-        private Seller[] sellerlist;
-        private int buyers_array_logical_size = 0;
-        private int buyers_array_physical_size = 0;
-        private int sellers_array_logical_size = 0;
-        private int sellers_array_physical__size = 0;
+        private User[] users_list; // users array each user can be buyer or seller (polymorphism principle)
+        private int users_array_logical_size = 0;
+        private int users_array_physical_size = 0;
 
         public EcommerceStore(string name) //EcommerceStore constructor
         {
             this.name = name;
-            buyerlist = new Buyer[0];
-            sellerlist = new Seller[0];
+            users_list = new User[1]; // Initialize with a capacity of 1 //need to check
+            users_array_physical_size = 1;
         }
 
-        public Buyer[] GetBuyerList()
+        public User[] GetUserList()
         {
-            return buyerlist;
-        }
-
-        public Seller[] GetSellerList()
-        {
-            return sellerlist;
+            return users_list;
         }
 
         public string GetStoreName()
@@ -39,63 +32,77 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return name;
         }
 
-        //recived buyer object and add him to store. 
-        //gets the buyer object from AddBuyer function (the AddBuyer function creates buyer from info that comes from the MainProgram)
-        public void AddBuyerToStore(Buyer buyer)
+        // AddBuyer function recieves buyer details and adds the buyer to store
+        public void AddBuyer(string username, string password, string street, int buildingNumber, string city, string country)
         {
-            if (buyer == null)
+            if (IsUserAlreadyExists(username))
+            {
+                Console.WriteLine("User with the same username already exists.");
+                return;
+            }
+
+            Buyer buyer = new Buyer(username, password, new Address(street, buildingNumber, city, country));
+            AddUserToStore(buyer);
+            Console.WriteLine("Buyer added successfully.");
+        }
+        // AddSeller function recieves seller details and adds the seller to store
+        public void AddSeller(string username, string password, string street, int buildingNumber, string city, string country)
+        {
+            if (IsUserAlreadyExists(username))
+            {
+                Console.WriteLine("User with the same username already exists.");
+                return;
+            }
+
+            Seller seller = new Seller(username, password, new Address(street, buildingNumber, city, country));
+            AddUserToStore(seller);
+            Console.WriteLine("Seller added successfully.");
+        }
+
+        // Adds a user (can be buyer or seller) to the store
+        private void AddUserToStore(User user)
+        {
+            if (user == null)
             {
                 return;
             }
 
-            if (buyers_array_logical_size == 0)
+            if (users_array_logical_size == users_array_physical_size)
             {
-                buyerlist = new Buyer[1];
-                buyers_array_physical_size = 1;
-            }
-            else if (buyers_array_logical_size == buyers_array_physical_size)
-            {
-                int newSize = buyerlist.Length * 2;
-                Buyer[] temp = new Buyer[newSize];
-                buyerlist.CopyTo(temp, 0);
-                buyerlist = temp;
-                buyers_array_physical_size = newSize;
+                int newSize = users_array_physical_size * 2;
+                User[] temp = new User[newSize];
+                Array.Copy(users_list, temp, users_array_logical_size);
+                users_list = temp;
+                users_array_physical_size = newSize;
             }
 
-            buyerlist[buyers_array_logical_size++] = buyer;
+            users_list[users_array_logical_size++] = user;
         }
 
-        //recived seller object and add him to store. 
-        //gets the seller object from AddBuyer function (the AddSeller function creates seller from info that comes from the MainProgram)
-        public void AddSellerToStore(Seller seller)
+
+        public void PrintUsersArrayDetails()
         {
-            if (sellers_array_logical_size == 0)
+            Console.WriteLine("Users array details:");
+            Console.WriteLine($"Logical Size: {users_array_logical_size}, Physical Size: {users_array_physical_size}");
+            foreach (User user in users_list)
             {
-                sellerlist = new Seller[1];
-                sellers_array_physical__size = 1;
+                if (user != null)
+                {
+                    Console.WriteLine(user.ToString());
+                    Console.WriteLine();
+                }
             }
-            else if (sellers_array_logical_size == sellerlist.Length)
-            {
-                int newSize = sellerlist.Length * 2;
-                Seller[] temp = new Seller[newSize];
-                sellerlist.CopyTo(temp, 0);
-                sellerlist = temp;
-                sellers_array_physical__size = newSize;
-            }
-
-            sellerlist[sellers_array_logical_size++] = seller;
+            Console.WriteLine("The printing is completed.");
         }
-
         public void PrintBuyersArrayDetails()
         {
             Console.WriteLine("Buyers array Details:");
-            Console.WriteLine($"Logical Size: {buyers_array_logical_size}, Physical Size: {buyers_array_physical_size}");
-            foreach (Buyer buyer in buyerlist)
+            foreach (User user in users_list)
             {
-                if (buyer != null)
+                if (user is Buyer buyer)
                 {
-                    Console.WriteLine($"Username: {buyer.GetBuyerUsername()}");
-                    Console.WriteLine($"Address: {buyer.GetBuyerAddress().PrintAddressToString()}");
+                    Console.WriteLine($"Username: {buyer.GetUsername()}");
+                    Console.WriteLine($"Address: {buyer.GetAddress().ToString()}");
                     Console.WriteLine();
                 }
             }
@@ -105,48 +112,20 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public void PrintSellersArrayDetails()
         {
             Console.WriteLine("Sellers array Details:");
-            Console.WriteLine($"Logical Size: {sellers_array_logical_size}, Physical Size: {sellers_array_physical__size}");
-            foreach (Seller seller in sellerlist)
+            foreach (User user in users_list)
             {
-                if (seller != null)
+                if (user is Seller seller)
                 {
-                    Console.WriteLine($"Username: {seller.GetSellerUsername()}, Address: {seller.GetSellerAddress().PrintAddressToString()}");
+                    Console.WriteLine($"Username: {seller.GetUsername()}");
+                    Console.WriteLine($"Address: {seller.GetAddress().ToString()}");
                     Console.WriteLine();
                 }
             }
             Console.WriteLine("The printing is completed.");
         }
 
-        //recived the buyer details from the MainProgram
-        public void AddBuyer(string username, string password, string street, int buildingNumber, string city, string country)
-        {
-
-            if (IsBuyerAlreadyExists(username))
-            {
-                Console.WriteLine("Buyer with the same username already exists.");
-                return;
-            }
-            Buyer buyer = new Buyer(username, password, new Address(street, buildingNumber, city, country));
-            AddBuyerToStore(buyer);
-            Console.WriteLine("Buyer added successfully.");
-        }
-
-        //recived the seller details from the MainProgram
-        public void AddSeller(string username, string password, string street, int buildingNumber, string city, string country)
-        {
-
-            if (IsSellerAlreadyExists(username))
-            {
-                Console.WriteLine("Seller with the same username already exists.");
-                return;
-            }
-            Seller seller = new Seller(username, password, new Address(street, buildingNumber, city, country));
-            AddSellerToStore(seller);
-            Console.Write("Seller added successfully.\n");
-        }
-
-        //recived the info from the MainProgram
-        public void AddProductToSeller(string username, string productName, int productPrice, bool isSpecialProduct, int packagingFee, string category)
+        // Adds a product to the seller's product list
+        public void AddProductToSeller(string username, Product product)
         {
             Seller seller = FindSellerByUsername(username);
 
@@ -155,14 +134,13 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("Seller not found.");
                 return;
             }
-            Product product = new Product(productName, productPrice, isSpecialProduct, packagingFee, category);
+
             seller.AddToProductList(product);
-            Console.WriteLine("Product added successfully to the seller.");
         }
 
-        //recived the info from the MainProgram
+        // Adds a product to the buyer's shopping cart
         public void AddProductToBuyersCart(string username, string productName)
-        {         
+        {
             Buyer buyer = FindBuyerByUsername(username);
 
             if (buyer == null)
@@ -170,6 +148,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("Buyer not found.");
                 return;
             }
+
             Seller seller = FindSellerByProduct(productName);
 
             if (seller == null)
@@ -190,7 +169,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Console.WriteLine("Product added successfully to the buyer's cart.");
         }
 
-        //recived the info from the MainProgram
+        // Checkout for the buyer
         public void CheckoutForBuyer(string username)
         {
             Buyer buyer = FindBuyerByUsername(username);
@@ -206,23 +185,20 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 if (product != null)
                 {
-                    Console.WriteLine(product.PrintProductToString());
+                    Console.WriteLine(product.ToString());
                 }
             }
 
             int totalPrice = buyer.CalculateTotalPrice();
-
             Console.WriteLine($"Total Price: {totalPrice}");
 
             buyer.BuyTheShoppingCart();
-
             Console.WriteLine("Checkout completed successfully.");
         }
 
-        //recived the info from the MainProgram
+        // Prints buyer's shopping cart
         public void PrintBuyerShoppingCart(string username)
         {
-
             Buyer buyer = FindBuyerByUsername(username);
 
             if (buyer == null)
@@ -234,10 +210,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             buyer.PrintcurrentShoppingCart();
         }
 
-        //recived the info from the MainProgram
+        // Prints seller's product list
         public void PrintSellerProductsList(string username)
         {
-         
             Seller seller = FindSellerByUsername(username);
 
             if (seller == null)
@@ -248,11 +223,21 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             seller.PrintSellerProducts();
         }
+        public Seller FindSellerByUsername(string username)
+        {
+            foreach (User user in users_list)
+            {
+                if (user is Seller seller && seller.GetUsername() == username)
+                {
+                    return seller;
+                }
+            }
+            return null;
+        }
 
-        //recived the info from the MainProgram
+        // Views past purchases of the buyer
         public void ViewPastPurchases(string username)
         {
-
             Buyer buyer = FindBuyerByUsername(username);
 
             if (buyer == null)
@@ -261,19 +246,22 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
-            Console.WriteLine($"The Past Purchases of Buyer: {buyer.GetBuyerUsername()}");
+            Console.WriteLine($"The Past Purchases of Buyer: {buyer.GetUsername()}");
             buyer.PrintPastPurchases();
         }
-
-
-
-
-        // private functions, used only in this class: 
-        private bool IsBuyerAlreadyExists(string username)
+        public override string ToString()
         {
-            foreach (Buyer buyer in buyerlist)
+            return $"Store Name: {name}\nTotal Users: {users_array_logical_size}";
+        }
+
+
+
+        // Private helper functions used only in this class
+        private bool IsUserAlreadyExists(string username)
+        {
+            foreach (User user in users_list)
             {
-                if (buyer != null && buyer.GetBuyerUsername() == username)
+                if (user != null && user.GetUsername() == username)
                 {
                     return true;
                 }
@@ -281,45 +269,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return false;
         }
 
-        private bool IsSellerAlreadyExists(string username)
-        {
-            foreach (Seller seller in sellerlist)
-            {
-                if (seller != null && seller.GetSellerUsername() == username)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private Seller FindSellerByUsername(string username)
-        {
-            if (sellerlist == null)
-            {
-                return null;
-            }
-
-            foreach (Seller seller in sellerlist)
-            {
-                if (seller != null && seller.GetSellerUsername() == username)
-                {
-                    return seller;
-                }
-            }
-            return null;
-        }
 
         private Seller FindSellerByProduct(string productName)
         {
-            if (sellerlist == null)
+            foreach (User user in users_list)
             {
-                return null;
-            }
-
-            foreach (Seller seller in sellerlist)
-            {
-                if (seller != null && seller.SearchProductIfItExists(productName))
+                if (user is Seller seller && seller.SearchProductIfItExists(productName))
                 {
                     return seller;
                 }
@@ -329,14 +284,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         private Buyer FindBuyerByUsername(string username)
         {
-            if (buyerlist == null)
+            foreach (User user in users_list)
             {
-                return null;
-            }
-
-            foreach (Buyer buyer in buyerlist)
-            {
-                if (buyer != null && buyer.GetBuyerUsername() == username)
+                if (user is Buyer buyer && buyer.GetUsername() == username)
                 {
                     return buyer;
                 }

@@ -14,7 +14,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             EcommerceStore store = new EcommerceStore("niv and dan store"); //creating a new store
             bool exitRequested = false;
-
+           
             while (!exitRequested)
             {
                 Console.WriteLine("Choose an action:");
@@ -72,28 +72,79 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         store.AddSeller(seller_username,seller_password,seller_street,seller_buildingNumber,seller_city,seller_country);
                         break;
 
-                    
-                    case 3://Add Product to Seller
-                        Console.Write("Enter seller username:");
+                    case 3: // Add Product to Seller
+                        Console.Write("Enter seller username: ");
                         string username = Console.ReadLine();
-                        Console.Write("Enter product name:");
+                        Seller seller = store.FindSellerByUsername(username);
+                        if (seller == null)
+                        {
+                            Console.WriteLine("Seller not found.");
+                            break;
+                        }
+
+                        Console.Write("Enter product name: ");
                         string productName = Console.ReadLine();
-                        Console.Write("Enter product price:");
+                        Console.Write("Enter product price: ");
                         int productPrice = int.Parse(Console.ReadLine());
-                        Console.Write("Is it a special product? (true/false):");
+                        Console.Write("Is it a special product? (true/false): ");
                         bool isSpecialProduct = bool.Parse(Console.ReadLine());
                         int packagingFee = 0;
+                        int starsRanking = 0;
+
                         if (isSpecialProduct)
                         {
-                            Console.Write("Enter packaging fee:");
+                            Console.Write("Enter packaging fee: ");
                             packagingFee = int.Parse(Console.ReadLine());
+                            Console.Write("Enter the stars ranking: ");
+                            starsRanking = int.Parse(Console.ReadLine());
                         }
-                        Console.Write("Enter category of product (kids, electricity, office, clothing):");
-                        string category = Console.ReadLine();
-                        store.AddProductToSeller(username, productName, productPrice, isSpecialProduct, packagingFee, category);
+
+                        bool validCategory = false;
+                        Product.ProductCategory category = 0;
+
+                        while (validCategory == false)
+                        {
+                            Console.WriteLine("Enter category of product:");
+                            Console.Write("1 for Kids, 2 for Electricity, 3 for Office, 4 for Clothing: ");
+                            if (Enum.TryParse(Console.ReadLine(), out category) && Enum.IsDefined(typeof(Product.ProductCategory), category))
+                            {
+                                validCategory = true; // Set validCategory to true to exit the loop
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid category. Please enter a valid category number.");
+                            }
+                        }
+
+                        // Check if the product already exists. if product is already exists in the seller array we dont create a new instance of product/special product
+                        // and then we do not increment the id number of product (note: because id number is static attribute its automatically increasing by 1 when
+                        // we crate new product/special product. so this validation will ensure we not crate products duplication)
+                        bool productExists = seller.GetSellerProductList().Any(p =>
+                            p.GetProductName().Equals(productName, StringComparison.OrdinalIgnoreCase) &&
+                            p.GetProductPrice() == productPrice &&
+                            p.GetCategoryOfProduct() == category &&
+                            ((p is SpecialProduct sp && isSpecialProduct && sp.GetPackagingFee() == packagingFee && sp.GetStarsRanking() == starsRanking) ||
+                             (!(p is SpecialProduct) && !isSpecialProduct)));
+
+                        if (productExists)
+                        {
+                            Console.WriteLine("Product with the same name, price, category, and special status already exists for this seller.");
+                            break;
+                        }
+
+                        // Add the product to the seller's list
+                        if (isSpecialProduct) // add special product 
+                        {
+                            SpecialProduct specialProduct = new SpecialProduct(productName, productPrice, category, starsRanking, packagingFee);
+                            store.AddProductToSeller(username, specialProduct);
+                        }
+                        else // add regular product
+                        {
+                            Product product = new Product(productName, productPrice, category);
+                            store.AddProductToSeller(username, product);
+                        }
                         break;
-                    
-                    
+
                     case 4: //Add Product to buyer Cart 
                         Console.Write("Enter buyer username:");
                         string add_product_username = Console.ReadLine();

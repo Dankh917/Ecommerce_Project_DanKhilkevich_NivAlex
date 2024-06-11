@@ -96,12 +96,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return this.country_name;
         }
 
-        public string PrintAddressToString()
+        public override string ToString()
         {
-            return $"Street name: {street_name}, Number of building: {number_of_building}, City: {city_name}, Country: {country_name}";
+            return $"Street Name: {street_name}, Number of Building: {number_of_building}, City: {city_name}, Country: {country_name}";
         }
 
-        
+
     }
     
 
