@@ -73,6 +73,31 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 total_price += specialProduct.GetPackagingFee();
             }
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Order other = (Order)obj;
+
+            return total_price == other.total_price &&
+                   buyer_details.Equals(other.buyer_details) &&
+                   product_list.SequenceEqual(other.product_list);
+        }
+        public override string ToString()
+        {
+            string result = "Order Details:\n";
+            result += $"Buyer: {buyer_details}\n";
+            result += "Products:\n";
+            foreach (var product in product_list)
+            {
+                result += product.ToString() + "\n";
+            }
+            result += $"Total Price: {total_price}\n";
+            return result;
+        }
 
     }
 }

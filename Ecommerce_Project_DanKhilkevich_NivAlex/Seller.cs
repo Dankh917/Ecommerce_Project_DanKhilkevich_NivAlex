@@ -119,6 +119,20 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("-------------------");
             }
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Seller other = (Seller)obj;
+
+            return GetUsername().Equals(other.GetUsername()) &&
+                   GetPassword().Equals(other.GetPassword()) &&
+                   GetAddress().Equals(other.GetAddress()) &&
+                   seller_products.SequenceEqual(other.seller_products);
+        }
 
     }
 }

@@ -96,6 +96,24 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return this.country_name;
         }
 
+        public override bool Equals(object obj)
+        {
+            // check if the object is null or not of the correct type
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            // casting the object to an Address
+            Address other = (Address)obj;
+
+            // compare the address's street name, number of building, city name, and country name
+            return street_name == other.street_name &&
+                   number_of_building == other.number_of_building &&
+                   city_name == other.city_name &&
+                   country_name == other.country_name;
+        }
+
         public override string ToString()
         {
             return $"Street Name: {street_name}, Number of Building: {number_of_building}, City: {city_name}, Country: {country_name}";

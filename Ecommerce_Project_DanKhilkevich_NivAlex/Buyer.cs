@@ -171,6 +171,21 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 orderNumber++; // Increment order number for the next order
             }
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Buyer other = (Buyer)obj;
+
+            return GetUsername() == other.GetUsername() &&
+                   GetPassword() == other.GetPassword() &&
+                   GetAddress().Equals(other.GetAddress()) &&
+                   shopping_cart.SequenceEqual(other.shopping_cart) &&
+                   past_purchases.SequenceEqual(other.past_purchases);
+        }
 
 
 
