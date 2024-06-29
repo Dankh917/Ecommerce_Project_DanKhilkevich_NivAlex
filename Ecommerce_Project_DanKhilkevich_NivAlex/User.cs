@@ -12,52 +12,63 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         protected string password;
         protected Address address;
 
+        public string Username
+        {
+            get { return username; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Username cannot be null or empty.", nameof(Username));
+                }
+
+                if (value.Any(char.IsDigit))
+                {
+                    throw new ArgumentException("Username cannot contain numbers.", nameof(Username));
+                }
+
+                username = value;
+            }
+        }
+
+        public string Password
+        {
+            get { return password; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Password cannot be null or empty.", nameof(Password));
+                }
+                password = value;
+            }
+        }
+
+        public Address Address
+        {
+            get { return address; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(Address), "Address cannot be null.");
+                }
+                address = value;
+            }
+        }
+
         public User() { }
 
         public User(string username, string password, Address address)
         {
-            SetUsername(username);
-            SetPassword(password);
-            SetAddress(address);
-        }
-        public bool SetUsername(string username)
-        {
-            this.username = username;
-            // the Adding validation will be here in the future
-            return true;
+            Username = username;
+            Password = password;
+            Address = address;
         }
 
-        public bool SetPassword(string password)
-        {
-            this.password = password;
-            // the Adding validation will be here in the future
-            return true;
-        }
-
-        public bool SetAddress(Address address)
-        {
-            this.address = address;
-            // the Adding validation will be here in the future
-            return true; 
-        }
-
-        public string GetUsername()
-        {
-            return username;
-        }
-
-        public string GetPassword()
-        {
-            return password;
-        }
-
-        public Address GetAddress()
-        {
-            return address;
-        }
         public override string ToString()
         {
-            return $"Username: {username}, Address: {address}";
+            return $"Username: {Username}, Address: {Address}";
         }
     }
 }

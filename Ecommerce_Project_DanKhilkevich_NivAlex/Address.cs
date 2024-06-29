@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
@@ -13,110 +14,104 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private string city_name;
         private string country_name;
 
-        public Address(string street_name, int number_of_building, string city_name, string country_name) //address constructor
+        public Address(string street_name, int number_of_building, string city_name, string country_name) // address constructor
         {
-            while (true)
+            StreetName = street_name;
+            NumberOfBuilding = number_of_building;
+            CityName = city_name;
+            CountryName = country_name;
+        }
+
+        public Address(Address other) // copy constructor
+        {
+            StreetName = other.StreetName;
+            NumberOfBuilding = other.NumberOfBuilding;
+            CityName = other.CityName;
+            CountryName = other.CountryName;
+        }
+
+        public string StreetName
+        {
+            get { return street_name; }
+            set
             {
-                if (SetStreetName(street_name) == true) { break; }
-                Console.WriteLine("please reenter street name: ");
-                street_name = Console.ReadLine();
-                
-            }
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Street name cannot be null or empty.", nameof(StreetName));
+                }
 
-            while (true)
+                if (value.Any(char.IsDigit))
+                {
+                    throw new ArgumentException("Street name cannot contain digits.", nameof(StreetName));
+                }
+
+                street_name = value;
+            }
+        }
+
+        public int NumberOfBuilding
+        {
+            get { return number_of_building; }
+            set
             {
-                if (SetNumberOfBuilding(number_of_building) == true) { break; }
-                Console.WriteLine("please reenter number of building: ");
-                number_of_building = int.Parse(Console.ReadLine());
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Number of building must be greater than zero.", nameof(NumberOfBuilding));
+                }
 
+                // Check if the value is a string
+                if (value.GetType() == typeof(string))
+                {
+                    throw new ArgumentException("Number of building cannot be a string.", nameof(NumberOfBuilding));
+                }
+
+                number_of_building = value;
             }
+        }
 
-            while (true)
+        public string CityName
+        {
+            get { return city_name; }
+            set
             {
-                if (SetCityName(city_name) == true) { break; }
-                Console.WriteLine("please reenter city name: ");
-                city_name = Console.ReadLine();
-
+                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$"))
+                    throw new ArgumentException("City name can only contain letters and spaces.");
+                city_name = value;
             }
+        }
 
-            while (true)
+        public string CountryName
+        {
+            get { return country_name; }
+            set
             {
-                if (SetCountryName(country_name) == true) { break; }
-                Console.WriteLine("please reenter country name: ");
-                country_name = Console.ReadLine();
-
+                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$"))
+                    throw new ArgumentException("Country name can only contain letters and spaces.");
+                country_name = value;
             }
-
-        }
-
-        public Address(Address other) //copy constructor
-        {
-            street_name=other.street_name;
-            number_of_building=other.number_of_building;
-            city_name=other.city_name;
-            country_name=other.country_name;
-        }
-
-        public bool SetStreetName(string street_name)
-        {
-            this.street_name = street_name;
-            return true;
-        }
-
-        public bool SetNumberOfBuilding(int number_of_building)
-        {
-            this.number_of_building = number_of_building; 
-            return true;
-        }
-
-        public bool SetCityName(string city_name)
-        {
-            this.city_name = city_name; 
-            return true;
-        }
-
-        public bool SetCountryName(string country_name)
-        {
-            this.country_name = country_name;
-            return true;
-        }
-
-        public string GetStreetName()
-        {
-            return this.street_name;
-        }
-
-        public int GetNumberOfBuilding()
-        {
-            return this.number_of_building;
-        }
-
-        public string GetCountryName()
-        {
-            return this.country_name;
         }
 
         public override bool Equals(object obj)
         {
-            // check if the object is null or not of the correct type
+            // Check if the object is null or not of the correct type
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
 
-            // casting the object to an Address
+            // Casting the object to an Address
             Address other = (Address)obj;
 
-            // compare the address's street name, number of building, city name, and country name
-            return street_name == other.street_name &&
-                   number_of_building == other.number_of_building &&
-                   city_name == other.city_name &&
-                   country_name == other.country_name;
+            // Compare the address's street name, number of building, city name, and country name
+            return StreetName == other.StreetName &&
+                   NumberOfBuilding == other.NumberOfBuilding &&
+                   CityName == other.CityName &&
+                   CountryName == other.CountryName;
         }
 
         public override string ToString()
         {
-            return $"Street Name: {street_name}, Number of Building: {number_of_building}, City: {city_name}, Country: {country_name}";
+            return $"Street Name: {StreetName}, Number of Building: {NumberOfBuilding}, City: {CityName}, Country: {CountryName}";
         }
 
 

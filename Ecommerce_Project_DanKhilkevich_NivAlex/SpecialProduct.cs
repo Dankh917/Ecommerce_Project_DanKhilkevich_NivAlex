@@ -13,48 +13,47 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private int packaging_fee; // Packaging fee attribute for special product
 
         public SpecialProduct(string product_name, int product_price, ProductCategory category_of_product, int starsRanking, int packaging_fee)
-         : base(product_name, product_price, category_of_product)
+            : base(product_name, product_price, category_of_product)
         {
-            this.starsRanking = starsRanking;
-            this.packaging_fee = packaging_fee;
+            StarsRanking = starsRanking;
+            PackagingFee = packaging_fee;
         }
 
         public SpecialProduct(SpecialProduct other) : base(other) // Copy constructor
         {
-            this.starsRanking = other.starsRanking;
-            this.packaging_fee = other.packaging_fee;
+            StarsRanking = other.StarsRanking;
+            PackagingFee = other.PackagingFee;
         }
 
-        public int GetStarsRanking()
+        public int StarsRanking
         {
-            return this.starsRanking;
-        }
-
-        public int GetPackagingFee()
-        {
-            return this.packaging_fee;
-        }
-
-        public bool SetStarsRanking(int starsRanking)
-        {
-            if (starsRanking < 1 || starsRanking > 5)
+            get { return starsRanking; }
+            set
             {
-                Console.WriteLine("Stars ranking must be between 1 and 5.");
-                return false;
+                if (value < 1 || value > 5)
+                {
+                    throw new ArgumentException("Stars ranking must be between 1 and 5.");
+                }
+                starsRanking = value;
             }
-            this.starsRanking = starsRanking;
-            return true;
         }
 
-        public bool SetPackagingFee(int packaging_fee)
+        public int PackagingFee
         {
-            this.packaging_fee = packaging_fee;
-            return true;
+            get { return packaging_fee; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Packaging fee cannot be negative.");
+                }
+                packaging_fee = value;
+            }
         }
 
         public override string ToString()
         {
-            return base.ToString() + $"\nPackaging Fee: {packaging_fee}\nStars Ranking: {starsRanking}";
+            return base.ToString() + $"\nPackaging Fee: {PackagingFee}\nStars Ranking: {StarsRanking}";
         }
     }
 }

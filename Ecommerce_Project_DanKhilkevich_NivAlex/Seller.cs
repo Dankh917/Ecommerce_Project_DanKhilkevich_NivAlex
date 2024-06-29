@@ -8,7 +8,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
     internal class Seller : User
     {
-        private Product[] seller_products; //products array, each product can be regular or special (polymorphism principle)
+        private Product[] seller_products; // products array, each product can be regular or special (polymorphism principle)
         private int logical_size = 0;
         private int physical_size = 0;
 
@@ -16,35 +16,68 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public Seller() : base()
         {
             // Initialize the seller products array with zero items
-            seller_products = new Product[0];
+            SellerProducts = new Product[0];
         }
 
         // Constructor to initialize the seller properties
         public Seller(string seller_username, string seller_password, Address seller_address) : base(seller_username, seller_password, seller_address)
         {
-            seller_products = new Product[0];
+            SellerProducts = new Product[0];
         }
 
-        public Seller(Seller other) : base(other.GetUsername(), other.GetPassword(), other.GetAddress()) //copy constructor
+        public Seller(Seller other) : base(other.Username, other.Password, other.Address) // copy constructor
         {
-            this.seller_products = new Product[other.seller_products.Length];
-            Array.Copy(other.seller_products, this.seller_products, other.seller_products.Length);
-            this.logical_size = other.logical_size;
+            SellerProducts = new Product[other.SellerProducts.Length];
+            Array.Copy(other.SellerProducts, SellerProducts, other.SellerProducts.Length);
+            LogicalSize = other.LogicalSize;
         }
+
+        public Product[] SellerProducts
+        {
+            get { return seller_products; }
+            private set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("Seller products cannot be null.");
+                seller_products = value;
+            }
+        }
+
+        public int LogicalSize
+        {
+            get { return logical_size; }
+            private set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Logical size cannot be negative.");
+                logical_size = value;
+            }
+        }
+
+        public int PhysicalSize
+        {
+            get { return physical_size; }
+            private set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Physical size cannot be negative.");
+                physical_size = value;
+            }
+        }
+
         // function to get the list of products
         public Product[] GetSellerProductList()
         {
-            Product[] products = new Product[logical_size];
-            Array.Copy(seller_products, products, logical_size);
+            Product[] products = new Product[LogicalSize];
+            Array.Copy(SellerProducts, products, LogicalSize);
             return products;
         }
-
 
         // function to add a product to the seller's product list
         public void AddToProductList(Product product)
         {
             // Check if the product already exists in the seller's product list
-            foreach (Product existingProduct in seller_products)
+            foreach (Product existingProduct in SellerProducts)
             {
                 if (existingProduct != null && existingProduct.Equals(product))
                 {
@@ -52,37 +85,37 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     return;
                 }
             }
-            if (physical_size == 0)
+            if (PhysicalSize == 0)
             {
-                seller_products = new Product[1];
-                physical_size = 1;
+                SellerProducts = new Product[1];
+                PhysicalSize = 1;
             }
             // Check if the logical size exceeds the length of the product list
-            if (logical_size == physical_size)
+            if (LogicalSize == PhysicalSize)
             {
                 // Double the size of the product list
-                int newLength = physical_size * 2;
+                int newLength = PhysicalSize * 2;
                 Product[] temp = new Product[newLength];
-                Array.Copy(seller_products, temp, logical_size);
-                seller_products = temp;
-                physical_size = newLength;
+                Array.Copy(SellerProducts, temp, LogicalSize);
+                SellerProducts = temp;
+                PhysicalSize = newLength;
             }
 
             // Add the product to the end of the product list
-            seller_products[logical_size++] = product;
+            SellerProducts[LogicalSize++] = product;
             Console.WriteLine("Product added successfully to the seller.");
         }
 
         public bool SearchProductIfItExists(string name_of_product_to_find)
         {
-            if (seller_products == null)
+            if (SellerProducts == null)
             {
                 return false;
             }
 
-            foreach (Product product in seller_products)
+            foreach (Product product in SellerProducts)
             {
-                if (product != null && product.GetProductName() == name_of_product_to_find)
+                if (product != null && product.ProductName == name_of_product_to_find)
                 {
                     return true;
                 }
@@ -92,9 +125,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public Product FindProductByName(string productName)
         {
-            foreach (Product product in seller_products)
+            foreach (Product product in SellerProducts)
             {
-                if (product != null && product.GetProductName().Equals(productName))
+                if (product != null && product.ProductName.Equals(productName))
                 {
                     return product;
                 }
@@ -105,20 +138,21 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public void PrintSellerProducts()
         {
             Console.WriteLine(ToString());
-            Console.WriteLine($"Logical Size: {logical_size}, Physical Size: {physical_size}");
-            if (logical_size == 0)
+            Console.WriteLine($"Logical Size: {LogicalSize}, Physical Size: {PhysicalSize}");
+            if (LogicalSize == 0)
             {
                 Console.WriteLine("Seller has no products.");
                 return;
             }
-            
+
             Console.WriteLine("Seller Products:");
-            for (int i = 0; i < logical_size; i++)
+            for (int i = 0; i < LogicalSize; i++)
             {
-                Console.WriteLine($"{seller_products[i].ToString()}");
+                Console.WriteLine($"{SellerProducts[i].ToString()}");
                 Console.WriteLine("-------------------");
             }
         }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -128,10 +162,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             Seller other = (Seller)obj;
 
-            return GetUsername().Equals(other.GetUsername()) &&
-                   GetPassword().Equals(other.GetPassword()) &&
-                   GetAddress().Equals(other.GetAddress()) &&
-                   seller_products.SequenceEqual(other.seller_products);
+            return Username.Equals(other.Username) &&
+                   Password.Equals(other.Password) &&
+                   Address.Equals(other.Address) &&
+                   SellerProducts.SequenceEqual(other.SellerProducts);
         }
 
     }

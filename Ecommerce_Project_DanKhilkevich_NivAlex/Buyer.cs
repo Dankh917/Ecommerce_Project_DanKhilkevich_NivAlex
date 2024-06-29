@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
+
     internal class Buyer : User
     {
         private Product[] shopping_cart; //products array, each product can be regular or special (polymorphism principle)
@@ -15,50 +16,94 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private int past_purchases_physicalSize = 0;
         private int cartSize = 0;
 
-
         public Buyer(string buyer_username, string buyer_password, Address buyer_address) : base(buyer_username, buyer_password, buyer_address) //buyer constructor
         {
-            shopping_cart = new Product[0]; // Initialize as an empty array
-            past_purchases = new Order[0]; // Initialize as an empty array
-            past_purchases_logical_size = 0;
-            past_purchases_physicalSize = 0;
+            ShoppingCart = new Product[0]; // Initialize as an empty array
+            PastPurchases = new Order[0]; // Initialize as an empty array
+            PastPurchasesLogicalSize = 0;
+            PastPurchasesPhysicalSize = 0;
         }
 
-        public Buyer(Buyer other) : base(other.GetUsername(), other.GetPassword(), other.GetAddress()) //copy constructor
+        public Buyer(Buyer other) : base(other.Username, other.Password, other.Address) //copy constructor
         {
-            shopping_cart = new Product[other.shopping_cart.Length];
-            Array.Copy(other.shopping_cart, shopping_cart, other.shopping_cart.Length);
-            past_purchases = new Order[other.past_purchases.Length];
-            Array.Copy(other.past_purchases, past_purchases, other.past_purchases.Length);
-            cartSize = other.cartSize;
+            ShoppingCart = new Product[other.ShoppingCart.Length];
+            Array.Copy(other.ShoppingCart, ShoppingCart, other.ShoppingCart.Length);
+            PastPurchases = new Order[other.PastPurchases.Length];
+            Array.Copy(other.PastPurchases, PastPurchases, other.PastPurchases.Length);
+            CartSize = other.CartSize;
         }
 
-        public Product[] GetShoppingCart()
+        public Product[] ShoppingCart
         {
-            return this.shopping_cart;
+            get { return shopping_cart; }
+            private set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("Shopping cart cannot be null.");
+                shopping_cart = value;
+            }
         }
 
-        public Order[] GetPastPurchases()
+        public Order[] PastPurchases
         {
-            return this.past_purchases;
+            get { return past_purchases; }
+            private set
+            {
+                if (value == null)
+                    throw new ArgumentNullException("Past purchases cannot be null.");
+                past_purchases = value;
+            }
+        }
+
+        public int PastPurchasesLogicalSize
+        {
+            get { return past_purchases_logical_size; }
+            private set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Logical size of past purchases cannot be negative.");
+                past_purchases_logical_size = value;
+            }
+        }
+
+        public int PastPurchasesPhysicalSize
+        {
+            get { return past_purchases_physicalSize; }
+            private set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Physical size of past purchases cannot be negative.");
+                past_purchases_physicalSize = value;
+            }
+        }
+
+        public int CartSize
+        {
+            get { return cartSize; }
+            private set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Cart size cannot be negative.");
+                cartSize = value;
+            }
         }
 
         // AddProductToShoppingCart function received product and add the product to the buyer ShoppingCart
-        public void AddProductToShoppingCart(Product product) 
+        public void AddProductToShoppingCart(Product product)
         {
-            if (cartSize == 0)
+            if (CartSize == 0)
             {
-                shopping_cart = new Product[1];
+                ShoppingCart = new Product[1];
             }
-            else if (cartSize == shopping_cart.Length)
+            else if (CartSize == ShoppingCart.Length)
             {
-                int newSize = shopping_cart.Length * 2;
+                int newSize = ShoppingCart.Length * 2;
                 Product[] temp = new Product[newSize];
-                shopping_cart.CopyTo(temp, 0);
-                shopping_cart = temp;
+                ShoppingCart.CopyTo(temp, 0);
+                ShoppingCart = temp;
             }
 
-            shopping_cart[cartSize++] = product;
+            ShoppingCart[CartSize++] = product;
         }
 
         // BuyTheShoppingCart function create new order from current products list, add it to PastPurchases and clear the ShoppingCart 
@@ -68,7 +113,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Order currOrder = new Order(this); // Pass the buyer details to the order constructor
 
             // Add all products from the shopping cart to the order
-            foreach (Product product in shopping_cart)
+            foreach (Product product in ShoppingCart)
             {
                 if (product != null)
                 {
@@ -76,12 +121,35 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     currOrder.AddProductToOrder(product);
                 }
             }
+            try
+            {
+                currOrder.ValidateOrder(); //check if order has more then 1 product
+                AddOrderToPastPurchases(currOrder);
+                ClearShoppingCart();
+                Console.WriteLine("Checkout completed successfully.");
+            }
+            catch (SingleItemOrderException ex)
+            {
+                Console.WriteLine($"Order error: {ex.Message}");
+            }
+        }
+        public void BuySpecificOrder(Order currOrder)
+        {
+            try
+            {
+                // Validate the order to ensure it has more than one product
+                currOrder.ValidateOrder();
 
-            // Add the current order to past purchases
-            AddOrderToPastPurchases(currOrder);
+                // Add the validated order to the buyer's PastPurchases
+                AddOrderToPastPurchases(currOrder);
 
-            // Clear the shopping cart after purchase
-            ClearShoppingCart();
+                // Optional: Perform any additional actions after buying the order
+                Console.WriteLine("Order bought successfully.");
+            }
+            catch (SingleItemOrderException ex)
+            {
+                Console.WriteLine($"Order error: {ex.Message}");
+            }
         }
 
         public int CalculateTotalPrice()
@@ -89,14 +157,14 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             int totalPrice = 0;
 
             // Iterate over the shopping cart and sum up the prices of all products
-            foreach (Product product in shopping_cart)
+            foreach (Product product in ShoppingCart)
             {
                 if (product != null)
                 {
-                    totalPrice += product.GetProductPrice();
+                    totalPrice += product.ProductPrice;
                     if (product is SpecialProduct specialProduct)
                     {
-                        totalPrice += specialProduct.GetPackagingFee();
+                        totalPrice += specialProduct.ProductPrice;
                     }
                 }
             }
@@ -106,71 +174,83 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         private void AddOrderToPastPurchases(Order order)
         {
-            if (past_purchases_logical_size == 0)
+            if (PastPurchasesLogicalSize == 0)
             {
                 // Initialize the past purchases array with a single element
-                past_purchases = new Order[1];
-                past_purchases_physicalSize = 1;
+                PastPurchases = new Order[1];
+                PastPurchasesPhysicalSize = 1;
             }
-            else if (past_purchases_logical_size == past_purchases_physicalSize)
+            else if (PastPurchasesLogicalSize == PastPurchasesPhysicalSize)
             {
                 // Double the size of the past purchases array if it full
-                int newSize = past_purchases_physicalSize * 2;
+                int newSize = PastPurchasesPhysicalSize * 2;
                 Order[] temp = new Order[newSize];
-                Array.Copy(past_purchases, temp, past_purchases_logical_size);
-                past_purchases = temp;
-                past_purchases_physicalSize = newSize;
+                Array.Copy(PastPurchases, temp, PastPurchasesLogicalSize);
+                PastPurchases = temp;
+                PastPurchasesPhysicalSize = newSize;
             }
 
             // Add the order to past purchases at the logical size index
-            past_purchases[past_purchases_logical_size++] = order;
+            PastPurchases[PastPurchasesLogicalSize++] = order;
         }
 
         private void ClearShoppingCart()
         {
             // Clear all elements in the shopping cart array
-            Array.Clear(shopping_cart, 0, shopping_cart.Length);
+            Array.Clear(ShoppingCart, 0, ShoppingCart.Length);
             // Reset logical size to 0
-            cartSize = 0;
+            CartSize = 0;
         }
-        public void PrintcurrentShoppingCart()
+
+        public Order FindOrderById(int orderId)
+        {
+            foreach (Order order in past_purchases)
+            {
+                if (order.OrderID == orderId)
+                {
+                    return order;
+                }
+            }
+            return null; // Order not found
+        }
+        public void PrintCurrentShoppingCart()
         {
             Console.WriteLine("Shopping Cart Contents:");
-            Console.WriteLine($"Logical Size: {cartSize}, Physical Size: {shopping_cart.Length}");
-            for (int i = 0; i < cartSize; i++)
+            Console.WriteLine($"Logical Size: {CartSize}, Physical Size: {ShoppingCart.Length}");
+            for (int i = 0; i < CartSize; i++)
             {
-                Console.WriteLine($"Product {i + 1}: {shopping_cart[i].ToString()}");
+                Console.WriteLine($"Product {i + 1}: {ShoppingCart[i].ToString()}");
                 Console.WriteLine("--------------------------------------------");
             }
         }
+
         public void PrintPastPurchases()
         {
-            if (past_purchases == null || past_purchases.Length == 0)
+            if (PastPurchases == null || PastPurchases.Length == 0)
             {
                 Console.WriteLine("No past purchases available.");
                 return;
             }
 
             Console.WriteLine("Past Purchases:");
-            int orderNumber = 1; // Initialize order number
 
-            foreach (Order order in past_purchases)
+            foreach (Order order in PastPurchases)
             {
-                Console.WriteLine($"Order {orderNumber}:");
+                Console.WriteLine($"Order id: {order.OrderID}");
                 Console.WriteLine("Buyer Details:");
-                Console.WriteLine(order.GetBuyerDetails().ToString()); // Using UserToString from User class
-                Console.WriteLine("Products:");
+                Console.WriteLine(order.BuyerDetails.ToString()); // Using UserToString from User class
+                Console.WriteLine("Products list:");
 
-                foreach (Product product in order.GetProductList())
+                foreach (Product product in order.ProductList)
                 {
                     Console.WriteLine(product.ToString());
                 }
 
-                Console.WriteLine($"Total Price: {order.GetTotalPrice()}");
+                Console.WriteLine($"Total Price: {order.TotalPrice}");
                 Console.WriteLine("--------------------------------------------");
-                orderNumber++; // Increment order number for the next order
             }
         }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -180,14 +260,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             Buyer other = (Buyer)obj;
 
-            return GetUsername() == other.GetUsername() &&
-                   GetPassword() == other.GetPassword() &&
-                   GetAddress().Equals(other.GetAddress()) &&
-                   shopping_cart.SequenceEqual(other.shopping_cart) &&
-                   past_purchases.SequenceEqual(other.past_purchases);
+            return Username == other.Username &&
+                   Password == other.Password &&
+                   Address.Equals(other.Address) &&
+                   ShoppingCart.SequenceEqual(other.ShoppingCart) &&
+                   PastPurchases.SequenceEqual(other.PastPurchases);
         }
-
-
 
     }   
 

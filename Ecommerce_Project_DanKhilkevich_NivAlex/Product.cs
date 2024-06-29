@@ -25,105 +25,96 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public Product(string product_name, int product_price, ProductCategory category_of_product) // Product constructor
         {
-            this.product_id = GetNextProductId(); // assign ID using static method
+            this.ProductId = GetNextProductId(); // assign ID using static method
 
-            while (true)
-            {
-                if (SetProductName(product_name)) break;
-                Console.WriteLine("Please reenter product name: ");
-                product_name = Console.ReadLine();
-            }
-
-            while (true)
-            {
-                if (SetProductPrice(product_price)) break;
-                Console.WriteLine("Please reenter product price: ");
-                product_price = int.Parse(Console.ReadLine());
-            }
-
-            while (true)
-            {
-                if (SetCategoryOfProduct(category_of_product)) break;
-                Console.WriteLine("Please reenter category: ");
-                category_of_product = (ProductCategory)Enum.Parse(typeof(ProductCategory), Console.ReadLine(), true);
-            }
+            this.ProductName = product_name; // Use property to validate
+            this.ProductPrice = product_price; // Use property to validate
+            this.CategoryOfProduct = category_of_product; // Use property to validate
         }
 
         public Product(Product other) // Copy constructor
         {
-            this.product_id = GetNextProductId(); // Assign ID using static method
-            this.product_name = other.product_name;
-            this.product_price = other.product_price;
-            this.category_of_product = other.category_of_product;
+            this.ProductId = GetNextProductId(); // Assign ID using static method
+            this.ProductName = other.ProductName;
+            this.ProductPrice = other.ProductPrice;
+            this.CategoryOfProduct = other.CategoryOfProduct;
         }
 
-        public bool SetProductName(string product_name)
-        {
-            this.product_name = product_name;
-            //add validation in the future
-            return true;
-        }
-
-        public bool SetProductPrice(int product_price)
-        {
-            this.product_price = product_price;
-            //add validation in the future
-            return true;
-        }
-
-        public bool SetCategoryOfProduct(ProductCategory category_of_product)
-        {
-            this.category_of_product = category_of_product;
-            //add validation in the future
-            return true;
-        }
         public static int GetNextProductId()
         {
             return ++product_id_number;
         }
-        public string GetProductName()
+
+        public int ProductId
         {
-            return this.product_name;
+            get { return product_id; }
+            private set { product_id = value; }
         }
 
-        public int GetProductPrice()
+        public string ProductName
         {
-            return this.product_price;
+            get { return product_name; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Product name cannot be null or empty.");
+                }
+                product_name = value;
+            }
         }
 
-        public ProductCategory GetCategoryOfProduct()
+        public int ProductPrice
         {
-            return this.category_of_product;
+            get { return product_price; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Product price cannot be negative.");
+                }
+                product_price = value;
+            }
         }
 
-        public int GetProductId()
+        public ProductCategory CategoryOfProduct
         {
-            return this.product_id;
+            get { return category_of_product; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(ProductCategory), value))
+                {
+                    throw new ArgumentException("Invalid product category.");
+                }
+                category_of_product = value;
+            }
         }
+
         public override bool Equals(object obj)
         {
-            // check if the object is null or not of the correct type
+            // Check if the object is null or not of the correct type
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
 
-            // casting the object to a Product
+            // Casting the object to a Product
             Product other = (Product)obj;
 
-            // compare the product's name, category, and price
-            return product_name == other.product_name &&
-                   product_price == other.product_price &&
-                   category_of_product == other.category_of_product;
+            // Compare the product's name, category, and price
+            return ProductName == other.ProductName &&
+                   ProductPrice == other.ProductPrice &&
+                   CategoryOfProduct == other.CategoryOfProduct;
         }
+
         public override int GetHashCode()
         {
-            return product_id.GetHashCode();
+            return ProductId.GetHashCode();
         }
+
         public override string ToString()
         {
-            return $"Product Type: {GetType().Name}\nProduct ID: {product_id}\nProduct Name: {product_name}\nProduct Price: {product_price}\nCategory of Product: {category_of_product}";
-            
+            return $"Product Type: {GetType().Name}\nProduct ID: {ProductId}\nProduct Name: {ProductName}\nProduct Price: {ProductPrice}\nCategory of Product: {CategoryOfProduct}";
         }
     }
 

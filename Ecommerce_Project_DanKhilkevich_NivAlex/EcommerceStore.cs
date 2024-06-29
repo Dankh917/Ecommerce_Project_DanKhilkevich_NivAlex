@@ -22,14 +22,30 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             users_array_physical_size = 1;
         }
 
-        public User[] GetUserList()
+        public User[] UsersList
         {
-            return users_list;
+            get { return users_list; }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(UsersList), "User list cannot be null.");
+                }
+                users_list = value;
+            }
         }
 
-        public string GetStoreName()
+        public string Name
         {
-            return name;
+            get { return name; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Store name cannot be null or empty.", nameof(Name));
+                }
+                name = value;
+            }
         }
 
         // AddBuyer function recieves buyer details and adds the buyer to store
@@ -101,8 +117,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 if (user is Buyer buyer)
                 {
-                    Console.WriteLine($"Username: {buyer.GetUsername()}");
-                    Console.WriteLine($"Address: {buyer.GetAddress().ToString()}");
+                    Console.WriteLine($"Username: {buyer.Username}");
+                    Console.WriteLine($"Address: {buyer.Address.ToString()}");
                     Console.WriteLine();
                 }
             }
@@ -116,8 +132,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 if (user is Seller seller)
                 {
-                    Console.WriteLine($"Username: {seller.GetUsername()}");
-                    Console.WriteLine($"Address: {seller.GetAddress().ToString()}");
+                    Console.WriteLine($"Username: {seller.Username}");
+                    Console.WriteLine($"Address: {seller.Address.ToString()}");
                     Console.WriteLine();
                 }
             }
@@ -181,7 +197,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
 
             Console.WriteLine("Buyer's Shopping Cart:");
-            foreach (Product product in buyer.GetShoppingCart())
+            foreach (Product product in buyer.ShoppingCart)
             {
                 if (product != null)
                 {
@@ -193,7 +209,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Console.WriteLine($"Total Price: {totalPrice}");
 
             buyer.BuyTheShoppingCart();
-            Console.WriteLine("Checkout completed successfully.");
         }
 
         // Prints buyer's shopping cart
@@ -207,7 +222,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
-            buyer.PrintcurrentShoppingCart();
+            buyer.PrintCurrentShoppingCart();
         }
 
         // Prints seller's product list
@@ -227,7 +242,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             foreach (User user in users_list)
             {
-                if (user is Seller seller && seller.GetUsername() == username)
+                if (user is Seller seller && seller.Username == username)
                 {
                     return seller;
                 }
@@ -246,13 +261,53 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
-            Console.WriteLine($"The Past Purchases of Buyer: {buyer.GetUsername()}");
+            Console.WriteLine($"The Past Purchases of Buyer: {buyer.Username}");
             buyer.PrintPastPurchases();
         }
         public override string ToString()
         {
             return $"Store Name: {name}\nTotal Users: {users_array_logical_size}";
         }
+
+        public void CloneCartFromLastPurchases(string buyerUsername, int orderId)
+        {
+            Buyer buyer = FindBuyerByUsername(buyerUsername);
+            if (buyer == null)
+            {
+                Console.WriteLine("Buyer not found.");
+                return;
+            }
+
+            Order orderToClone = buyer.FindOrderById(orderId); //find order that we want to clone
+            if (orderToClone == null)
+            {
+                Console.WriteLine($"Order with ID {orderId} not found in past purchases for buyer {buyerUsername}.");
+                return;
+            }
+
+            try
+            {
+                // Clone the order by calling the Clone function from ICloneable interface
+                Order clonedOrder = (Order)orderToClone.Clone();
+
+                // Add the cloned products to the buyer's current shopping cart
+                foreach (var product in clonedOrder.ProductList)
+                {
+                    AddProductToBuyersCart(buyerUsername, product.ProductName);
+                }
+                buyer.BuySpecificOrder(clonedOrder);
+                Console.WriteLine("Shopping cart cloned and added successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error cloning shopping cart: {ex.Message}");
+            }
+        }
+
+
+
+
+
 
 
 
@@ -261,7 +316,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             foreach (User user in users_list)
             {
-                if (user != null && user.GetUsername() == username)
+                if (user != null && user.Username == username)
                 {
                     return true;
                 }
@@ -286,7 +341,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             foreach (User user in users_list)
             {
-                if (user is Buyer buyer && buyer.GetUsername() == username)
+                if (user is Buyer buyer && buyer.Username == username)
                 {
                     return buyer;
                 }
