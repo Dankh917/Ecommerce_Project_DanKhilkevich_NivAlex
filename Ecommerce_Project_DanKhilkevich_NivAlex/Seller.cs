@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,33 +7,31 @@ using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
-    internal class Seller : User
+    internal class Seller : User, IComparable<Seller>
     {
-        private Product[] seller_products; // products array, each product can be regular or special (polymorphism principle)
+        private ArrayList seller_products; // Using ArrayList instead of Product[]
         private int logical_size = 0;
-        private int physical_size = 0;
 
         // seller constructor
         public Seller() : base()
         {
-            // Initialize the seller products array with zero items
-            SellerProducts = new Product[0];
+            // Initialize the seller products ArrayList
+            SellerProducts = new ArrayList();
         }
 
         // Constructor to initialize the seller properties
         public Seller(string seller_username, string seller_password, Address seller_address) : base(seller_username, seller_password, seller_address)
         {
-            SellerProducts = new Product[0];
+            SellerProducts = new ArrayList();
         }
 
         public Seller(Seller other) : base(other.Username, other.Password, other.Address) // copy constructor
         {
-            SellerProducts = new Product[other.SellerProducts.Length];
-            Array.Copy(other.SellerProducts, SellerProducts, other.SellerProducts.Length);
+            SellerProducts = new ArrayList(other.SellerProducts);
             LogicalSize = other.LogicalSize;
         }
 
-        public Product[] SellerProducts
+        public ArrayList SellerProducts
         {
             get { return seller_products; }
             private set
@@ -54,22 +53,11 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        public int PhysicalSize
-        {
-            get { return physical_size; }
-            private set
-            {
-                if (value < 0)
-                    throw new ArgumentException("Physical size cannot be negative.");
-                physical_size = value;
-            }
-        }
-
         // function to get the list of products
         public Product[] GetSellerProductList()
         {
             Product[] products = new Product[LogicalSize];
-            Array.Copy(SellerProducts, products, LogicalSize);
+            SellerProducts.CopyTo(products, 0);
             return products;
         }
 
@@ -85,24 +73,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     return;
                 }
             }
-            if (PhysicalSize == 0)
-            {
-                SellerProducts = new Product[1];
-                PhysicalSize = 1;
-            }
-            // Check if the logical size exceeds the length of the product list
-            if (LogicalSize == PhysicalSize)
-            {
-                // Double the size of the product list
-                int newLength = PhysicalSize * 2;
-                Product[] temp = new Product[newLength];
-                Array.Copy(SellerProducts, temp, LogicalSize);
-                SellerProducts = temp;
-                PhysicalSize = newLength;
-            }
 
-            // Add the product to the end of the product list
-            SellerProducts[LogicalSize++] = product;
+            // Add the product to the seller's product list
+            SellerProducts.Add(product);
+            LogicalSize++;
             Console.WriteLine("Product added successfully to the seller.");
         }
 
@@ -138,7 +112,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public void PrintSellerProducts()
         {
             Console.WriteLine(ToString());
-            Console.WriteLine($"Logical Size: {LogicalSize}, Physical Size: {PhysicalSize}");
+            Console.WriteLine($"Logical Size: {LogicalSize}");
             if (LogicalSize == 0)
             {
                 Console.WriteLine("Seller has no products.");
@@ -165,7 +139,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return Username.Equals(other.Username) &&
                    Password.Equals(other.Password) &&
                    Address.Equals(other.Address) &&
-                   SellerProducts.SequenceEqual(other.SellerProducts);
+                   SellerProducts.Cast<Product>().SequenceEqual(other.SellerProducts.Cast<Product>());
+        }
+        public int CompareTo(Seller other)
+        {
+            // Compare sellers based on the number of products they sell
+            return seller_products.Count.CompareTo(other.seller_products.Count);
         }
 
     }

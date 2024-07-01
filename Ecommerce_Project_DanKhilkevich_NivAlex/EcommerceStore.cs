@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,27 +12,24 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     internal class EcommerceStore
     {
         private string name;
-        private User[] users_list; // users array each user can be buyer or seller (polymorphism principle)
-        private int users_array_logical_size = 0;
-        private int users_array_physical_size = 0;
+        private ArrayList usersList; // Use ArrayList for the users list
 
-        public EcommerceStore(string name) //EcommerceStore constructor
+        public EcommerceStore(string name) // EcommerceStore constructor
         {
             this.name = name;
-            users_list = new User[1]; // Initialize with a capacity of 1 //need to check
-            users_array_physical_size = 1;
+            usersList = new ArrayList(); // Initialize the ArrayList
         }
 
-        public User[] UsersList
+        public ArrayList UsersList
         {
-            get { return users_list; }
+            get { return usersList; }
             set
             {
                 if (value == null)
                 {
                     throw new ArgumentNullException(nameof(UsersList), "User list cannot be null.");
                 }
-                users_list = value;
+                usersList = value;
             }
         }
 
@@ -48,32 +46,54 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        // AddBuyer function recieves buyer details and adds the buyer to store
-        public void AddBuyer(string username, string password, string street, int buildingNumber, string city, string country)
+        // Define the + operator to add a Buyer to the store
+        public static EcommerceStore operator +(EcommerceStore store, Buyer buyer)
         {
-            if (IsUserAlreadyExists(username))
+            if (store == null)
             {
-                Console.WriteLine("User with the same username already exists.");
-                return;
+                throw new ArgumentNullException(nameof(store), "Store instance cannot be null.");
             }
 
-            Buyer buyer = new Buyer(username, password, new Address(street, buildingNumber, city, country));
-            AddUserToStore(buyer);
+            if (buyer == null)
+            {
+                throw new ArgumentNullException(nameof(buyer), "Buyer instance cannot be null.");
+            }
+
+            if (store.IsUserAlreadyExists(buyer.Username))
+            {
+                Console.WriteLine("User with the same username already exists.");
+                return store;
+            }
+
+            store.AddUserToStore(buyer);
             Console.WriteLine("Buyer added successfully.");
+            return store;
         }
-        // AddSeller function recieves seller details and adds the seller to store
-        public void AddSeller(string username, string password, string street, int buildingNumber, string city, string country)
+
+        // Define the + operator to add a Seller to the store
+        public static EcommerceStore operator +(EcommerceStore store, Seller seller)
         {
-            if (IsUserAlreadyExists(username))
+            if (store == null)
             {
-                Console.WriteLine("User with the same username already exists.");
-                return;
+                throw new ArgumentNullException(nameof(store), "Store instance cannot be null.");
             }
 
-            Seller seller = new Seller(username, password, new Address(street, buildingNumber, city, country));
-            AddUserToStore(seller);
+            if (seller == null)
+            {
+                throw new ArgumentNullException(nameof(seller), "Seller instance cannot be null.");
+            }
+
+            if (store.IsUserAlreadyExists(seller.Username))
+            {
+                Console.WriteLine("User with the same username already exists.");
+                return store;
+            }
+
+            store.AddUserToStore(seller);
             Console.WriteLine("Seller added successfully.");
+            return store;
         }
+
 
         // Adds a user (can be buyer or seller) to the store
         private void AddUserToStore(User user)
@@ -83,24 +103,14 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
-            if (users_array_logical_size == users_array_physical_size)
-            {
-                int newSize = users_array_physical_size * 2;
-                User[] temp = new User[newSize];
-                Array.Copy(users_list, temp, users_array_logical_size);
-                users_list = temp;
-                users_array_physical_size = newSize;
-            }
-
-            users_list[users_array_logical_size++] = user;
+            usersList.Add(user);
         }
-
 
         public void PrintUsersArrayDetails()
         {
             Console.WriteLine("Users array details:");
-            Console.WriteLine($"Logical Size: {users_array_logical_size}, Physical Size: {users_array_physical_size}");
-            foreach (User user in users_list)
+            Console.WriteLine($"Logical Size: {usersList.Count}");
+            foreach (User user in usersList)
             {
                 if (user != null)
                 {
@@ -110,15 +120,16 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             Console.WriteLine("The printing is completed.");
         }
+
         public void PrintBuyersArrayDetails()
         {
             Console.WriteLine("Buyers array Details:");
-            foreach (User user in users_list)
+            foreach (User user in usersList)
             {
                 if (user is Buyer buyer)
                 {
                     Console.WriteLine($"Username: {buyer.Username}");
-                    Console.WriteLine($"Address: {buyer.Address.ToString()}");
+                    Console.WriteLine($"Address: {buyer.Address}");
                     Console.WriteLine();
                 }
             }
@@ -128,16 +139,32 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public void PrintSellersArrayDetails()
         {
             Console.WriteLine("Sellers array Details:");
-            foreach (User user in users_list)
+
+            // Cast ArrayList to an array of User
+            User[] sellersArray = (User[])usersList.ToArray(typeof(User));
+
+            // Sort sellers based on the number of products they sell
+            Array.Sort(sellersArray, (u1, u2) =>
+            {
+                if (u1 is Seller s1 && u2 is Seller s2)
+                {
+                    return s2.SellerProducts.Count.CompareTo(s1.SellerProducts.Count); // Sort in descending order
+                }
+                return 0;
+            });
+
+            // Print sorted sellers details
+            foreach (User user in sellersArray)
             {
                 if (user is Seller seller)
                 {
                     Console.WriteLine($"Username: {seller.Username}");
-                    Console.WriteLine($"Address: {seller.Address.ToString()}");
+                    Console.WriteLine($"Address: {seller.Address}");
+                    Console.WriteLine($"Number of products: {seller.SellerProducts.Count}");
                     Console.WriteLine();
                 }
             }
-            Console.WriteLine("The printing is completed.");
+            Console.WriteLine("Printing completed.");
         }
 
         // Adds a product to the seller's product list
@@ -238,13 +265,26 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             seller.PrintSellerProducts();
         }
+
         public Seller FindSellerByUsername(string username)
         {
-            foreach (User user in users_list)
+            foreach (User user in usersList)
             {
                 if (user is Seller seller && seller.Username == username)
                 {
                     return seller;
+                }
+            }
+            return null;
+        }
+
+        public Buyer FindBuyerByUsername(string username)
+        {
+            foreach (User user in usersList)
+            {
+                if (user is Buyer buyer && buyer.Username == username)
+                {
+                    return buyer;
                 }
             }
             return null;
@@ -263,10 +303,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             Console.WriteLine($"The Past Purchases of Buyer: {buyer.Username}");
             buyer.PrintPastPurchases();
-        }
-        public override string ToString()
-        {
-            return $"Store Name: {name}\nTotal Users: {users_array_logical_size}";
         }
 
         public void CloneCartFromLastPurchases(string buyerUsername, int orderId)
@@ -291,7 +327,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Order clonedOrder = (Order)orderToClone.Clone();
 
                 // Add the cloned products to the buyer's current shopping cart
-                foreach (var product in clonedOrder.ProductList)
+                foreach (Product product in clonedOrder.ProductList)
                 {
                     AddProductToBuyersCart(buyerUsername, product.ProductName);
                 }
@@ -303,18 +339,48 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine($"Error cloning shopping cart: {ex.Message}");
             }
         }
+        public void CompareBuyers(string username1, string username2)
+        {
+            Buyer buyer1 = FindBuyerByUsername(username1);
+            Buyer buyer2 = FindBuyerByUsername(username2);
 
+            if (buyer1 == null || buyer2 == null)
+            {
+                Console.WriteLine("Buyer not found.");
+                return;
+            }
 
+            int totalPriceBuyer1 = buyer1.CalculateTotalPrice();
+            int totalPriceBuyer2 = buyer2.CalculateTotalPrice();
 
+            Console.WriteLine($"Total price in {buyer1.Username}'s shopping cart: {totalPriceBuyer1}");
+            Console.WriteLine($"Total price in {buyer2.Username}'s shopping cart: {totalPriceBuyer2}");
 
+            if (totalPriceBuyer1 > totalPriceBuyer2)
+            {
+                Console.WriteLine($"{buyer1.Username} has a bigger shopping cart total than {buyer2.Username}.");
+            }
+            else if (totalPriceBuyer1 < totalPriceBuyer2)
+            {
+                Console.WriteLine($"{buyer2.Username} has a bigger shopping cart total than {buyer1.Username}.");
+            }
+            else
+            {
+                Console.WriteLine($"Both {buyer1.Username} and {buyer2.Username} have the same total price in their shopping carts.");
+            }
+        }
 
+        public override string ToString()
+        {
+            return $"Store Name: {name}\nTotal Users: {usersList.Count}";
+        }
 
 
 
         // Private helper functions used only in this class
         private bool IsUserAlreadyExists(string username)
         {
-            foreach (User user in users_list)
+            foreach (User user in usersList)
             {
                 if (user != null && user.Username == username)
                 {
@@ -324,26 +390,13 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return false;
         }
 
-
         private Seller FindSellerByProduct(string productName)
         {
-            foreach (User user in users_list)
+            foreach (User user in usersList)
             {
                 if (user is Seller seller && seller.SearchProductIfItExists(productName))
                 {
                     return seller;
-                }
-            }
-            return null;
-        }
-
-        private Buyer FindBuyerByUsername(string username)
-        {
-            foreach (User user in users_list)
-            {
-                if (user is Buyer buyer && buyer.Username == username)
-                {
-                    return buyer;
                 }
             }
             return null;

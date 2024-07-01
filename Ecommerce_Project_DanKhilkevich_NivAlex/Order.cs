@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,20 +19,16 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     {
         private static int nextOrderId = 1; // Static field to track the next order ID
         private int orderId; // Instance field for the order ID
-        private Product[] product_list; // Products array, each product can be regular or special (polymorphism principle)
+        private ArrayList product_list; // Use ArrayList instead of Product[]
         private int total_price;
         private Buyer buyer_details;
-        private int itemCount; // To keep track of the number of products in the order
-        private int physicalSize;
 
         public Order(Buyer buyer_details) // Order constructor
         {
             this.orderId = GetNextOrderId(); // Assign the next available order ID
             BuyerDetails = buyer_details;
-            product_list = new Product[0];
+            product_list = new ArrayList();
             total_price = 0;
-            itemCount = 0;
-            physicalSize = 0;
         }
 
         public int OrderID // Public property for accessing the order ID
@@ -70,18 +67,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        public Product[] ProductList
+        public ArrayList ProductList
         {
-            get
-            {
-                // Create a new array to hold only the products added to the order
-                Product[] products = new Product[itemCount];
-
-                // Copy the products from the product_list array to the new array
-                Array.Copy(product_list, products, itemCount);
-
-                return products;
-            }
+            get { return product_list; }
         }
 
         public void AddProductToOrder(Product product)
@@ -91,24 +79,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 throw new ArgumentNullException(nameof(product), "Product cannot be null.");
             }
 
-            if (itemCount == 0)
-            {
-                // If the product list is null, initialize it with a single element
-                product_list = new Product[1];
-                physicalSize = 1;
-            }
-            else if (itemCount == physicalSize)
-            {
-                // Double the size of the product list array if it's full
-                int newSize = physicalSize * 2;
-                Product[] temp = new Product[newSize];
-                Array.Copy(product_list, temp, itemCount);
-                product_list = temp;
-                physicalSize = newSize;
-            }
-
             // Add the product to the product list
-            product_list[itemCount++] = product;
+            product_list.Add(product);
 
             // Update the total price
             TotalPrice += product.ProductPrice;
@@ -122,7 +94,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public void ValidateOrder()
         {
-            if (itemCount == 1)
+            if (product_list.Count == 1)
             {
                 throw new SingleItemOrderException("Order cannot contain only one product.");
             }
@@ -133,12 +105,9 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Order clonedOrder = new Order(this.BuyerDetails);
 
             // Clone the product list
-            clonedOrder.product_list = new Product[this.product_list.Length];
-            Array.Copy(this.product_list, clonedOrder.product_list, this.product_list.Length);
+            clonedOrder.product_list = new ArrayList(this.product_list);
 
             clonedOrder.total_price = this.total_price;
-            clonedOrder.itemCount = this.itemCount;
-            clonedOrder.physicalSize = this.physicalSize;
 
             return clonedOrder;
         }
@@ -155,7 +124,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return OrderID == other.OrderID &&
                    TotalPrice == other.TotalPrice &&
                    BuyerDetails.Equals(other.BuyerDetails) &&
-                   ProductList.SequenceEqual(other.ProductList);
+                   ProductList.Cast<Product>().SequenceEqual(other.ProductList.Cast<Product>());
         }
 
         public override string ToString()

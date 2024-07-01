@@ -29,7 +29,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine("9. Print Seller Products List");
                 Console.WriteLine("10. View Past Purchases of a Buyer");
                 Console.WriteLine("11. Clone Shopping cart from Past Purchases");
-                Console.WriteLine("12. Exit");
+                Console.WriteLine("12. Compare Buyers' Shopping Carts");
+                Console.WriteLine("13. Exit");
 
                 Console.Write("\nEnter your choice: ");
                 if (!int.TryParse(Console.ReadLine(), out int choice))
@@ -85,8 +86,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                         case 11:
                             CloneCartFromLastPurchases(store);
                             break;
-
                         case 12:
+                            CheckBuyersComparison(store);
+                            break;
+                        case 13:
                             exitRequested = true;
                             break;
 
@@ -110,36 +113,64 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         private static void AddBuyer(EcommerceStore store)
         {
-            Console.Write("Enter buyer username:");
+            Console.Write("Enter buyer username: ");
             string buyer_username = Console.ReadLine();
-            Console.Write("Enter buyer password:");
+
+            Console.Write("Enter buyer password: ");
             string buyer_password = Console.ReadLine();
-            Console.Write("Enter street name:");
+
+            Console.Write("Enter street name: ");
             string buyer_street = Console.ReadLine();
-            Console.Write("Enter building number:");
-            int buyer_buildingNumber = int.Parse(Console.ReadLine());
-            Console.Write("Enter city name:");
+
+            Console.Write("Enter building number: ");
+            int buyer_buildingNumber;
+            while (!int.TryParse(Console.ReadLine(), out buyer_buildingNumber))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid building number:");
+            }
+
+            Console.Write("Enter city name: ");
             string buyer_city = Console.ReadLine();
-            Console.Write("Enter country name:");
+
+            Console.Write("Enter country name: ");
             string buyer_country = Console.ReadLine();
-            store.AddBuyer(buyer_username, buyer_password, buyer_street, buyer_buildingNumber, buyer_city, buyer_country);
+
+            // Create a new Buyer object
+            Buyer buyer = new Buyer(buyer_username, buyer_password, new Address(buyer_street, buyer_buildingNumber, buyer_city, buyer_country));
+
+            // Add the buyer to the store using the overloaded + operator
+            store += buyer;
         }
 
         private static void AddSeller(EcommerceStore store)
         {
-            Console.Write("Enter seller username:");
+            Console.Write("Enter seller username: ");
             string seller_username = Console.ReadLine();
-            Console.Write("Enter seller password:");
+
+            Console.Write("Enter seller password: ");
             string seller_password = Console.ReadLine();
-            Console.Write("Enter street name:");
+
+            Console.Write("Enter street name: ");
             string seller_street = Console.ReadLine();
-            Console.Write("Enter building number:");
-            int seller_buildingNumber = int.Parse(Console.ReadLine());
-            Console.Write("Enter city name:");
+
+            Console.Write("Enter building number: ");
+            int seller_buildingNumber;
+            while (!int.TryParse(Console.ReadLine(), out seller_buildingNumber))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid building number:");
+            }
+
+            Console.Write("Enter city name: ");
             string seller_city = Console.ReadLine();
-            Console.Write("Enter country name:");
+
+            Console.Write("Enter country name: ");
             string seller_country = Console.ReadLine();
-            store.AddSeller(seller_username, seller_password, seller_street, seller_buildingNumber, seller_city, seller_country);
+
+            // Create a new Seller object
+            Seller seller = new Seller(seller_username, seller_password, new Address(seller_street, seller_buildingNumber, seller_city, seller_country));
+
+            // Add the seller to the store using the overloaded + operator
+            store += seller;
         }
 
         private static void AddProductToSeller(EcommerceStore store)
@@ -257,6 +288,23 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             int orderId = int.Parse(Console.ReadLine());
 
             store.CloneCartFromLastPurchases(buyerUsername, orderId);
+        }
+        private static void CheckBuyersComparison(EcommerceStore store)
+        {
+            try
+            {
+                Console.WriteLine("Enter the name of the first buyer:");
+                string buyerName1 = Console.ReadLine();
+
+                Console.WriteLine("Enter the name of the second buyer:");
+                string buyerName2 = Console.ReadLine();
+
+                store.CompareBuyers(buyerName1, buyerName2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while comparing buyers: {ex.Message}");
+            }
         }
 
     }
