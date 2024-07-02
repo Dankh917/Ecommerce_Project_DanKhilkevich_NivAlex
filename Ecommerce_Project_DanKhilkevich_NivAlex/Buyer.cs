@@ -63,6 +63,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 return;
             }
 
+            //need to del code below me and improve code above me to throw an execption
+
             try
             {
                 // Create a new order
@@ -98,8 +100,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
                 // Add the validated order to the buyer's PastPurchases
                 AddOrderToPastPurchases(currOrder);
-
-                // Optional: Perform any additional actions after buying the order
                 Console.WriteLine("Order bought successfully.");
             }
             catch (SingleItemOrderException ex)

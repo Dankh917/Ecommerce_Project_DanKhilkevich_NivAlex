@@ -75,7 +75,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             set
             {
                 if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$"))
-                    throw new ArgumentException("City name can only contain letters and spaces.");
+                    throw new ArgumentException("City name can not be null and only contain letters and spaces.");
                 city_name = value;
             }
         }
@@ -86,7 +86,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             set
             {
                 if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$"))
-                    throw new ArgumentException("Country name can only contain letters and spaces.");
+                    throw new ArgumentException("Country name can not be null and only contain letters and spaces.");
                 country_name = value;
             }
         }
