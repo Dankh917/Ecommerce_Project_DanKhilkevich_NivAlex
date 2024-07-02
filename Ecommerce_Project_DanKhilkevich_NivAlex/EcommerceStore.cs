@@ -12,15 +12,15 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     internal class EcommerceStore
     {
         private string name;
-        private ArrayList usersList; // Use ArrayList for the users list
+        private List<User> usersList; // Use List<User> for the users list
 
         public EcommerceStore(string name) // EcommerceStore constructor
         {
             this.name = name;
-            usersList = new ArrayList(); // Initialize the ArrayList
+            usersList = new List<User>(); // Initialize the List<User>
         }
 
-        public ArrayList UsersList
+        public List<User> UsersList
         {
             get { return usersList; }
             set
@@ -94,7 +94,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return store;
         }
 
-
         // Adds a user (can be buyer or seller) to the store
         private void AddUserToStore(User user)
         {
@@ -140,29 +139,16 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             Console.WriteLine("Sellers array Details:");
 
-            // Cast ArrayList to an array of User
-            User[] sellersArray = (User[])usersList.ToArray(typeof(User));
-
             // Sort sellers based on the number of products they sell
-            Array.Sort(sellersArray, (u1, u2) =>
-            {
-                if (u1 is Seller s1 && u2 is Seller s2)
-                {
-                    return s2.SellerProducts.Count.CompareTo(s1.SellerProducts.Count); // Sort in descending order
-                }
-                return 0;
-            });
+            List<Seller> sellersList = usersList.OfType<Seller>().OrderByDescending(s => s.SellerProducts.Count).ToList();
 
             // Print sorted sellers details
-            foreach (User user in sellersArray)
+            foreach (Seller seller in sellersList)
             {
-                if (user is Seller seller)
-                {
-                    Console.WriteLine($"Username: {seller.Username}");
-                    Console.WriteLine($"Address: {seller.Address}");
-                    Console.WriteLine($"Number of products: {seller.SellerProducts.Count}");
-                    Console.WriteLine();
-                }
+                Console.WriteLine($"Username: {seller.Username}");
+                Console.WriteLine($"Address: {seller.Address}");
+                Console.WriteLine($"Number of products: {seller.SellerProducts.Count}");
+                Console.WriteLine();
             }
             Console.WriteLine("Printing completed.");
         }
@@ -339,6 +325,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine($"Error cloning shopping cart: {ex.Message}");
             }
         }
+
         public void CompareBuyers(string username1, string username2)
         {
             Buyer buyer1 = FindBuyerByUsername(username1);
@@ -374,8 +361,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             return $"Store Name: {name}\nTotal Users: {usersList.Count}";
         }
-
-
 
         // Private helper functions used only in this class
         private bool IsUserAlreadyExists(string username)

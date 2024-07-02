@@ -83,10 +83,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                             ViewPastPurchases(store);
                             break;
                         
-                        case 11:
+                        case 11: // Clone Shopping Cart
                             CloneCartFromLastPurchases(store);
                             break;
-                        case 12:
+                        case 12: // Compare between 2 buyers Shopping Carts
                             CheckBuyersComparison(store);
                             break;
                         case 13:
@@ -232,6 +232,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
 
             // Add the product to the seller's list
+
             if (isSpecialProduct) // add special product 
             {
                 SpecialProduct specialProduct = new SpecialProduct(productName, productPrice, category, starsRanking, packagingFee);

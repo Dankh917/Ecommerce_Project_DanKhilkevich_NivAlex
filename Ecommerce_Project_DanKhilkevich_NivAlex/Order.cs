@@ -19,7 +19,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     {
         private static int nextOrderId = 1; // Static field to track the next order ID
         private int orderId; // Instance field for the order ID
-        private ArrayList product_list; // Use ArrayList instead of Product[]
+        private List<Product> product_list; // Use List<Product>
         private int total_price;
         private Buyer buyer_details;
 
@@ -27,7 +27,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             this.orderId = GetNextOrderId(); // Assign the next available order ID
             BuyerDetails = buyer_details;
-            product_list = new ArrayList();
+            product_list = new List<Product>();
             total_price = 0;
         }
 
@@ -67,7 +67,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        public ArrayList ProductList
+        public List<Product> ProductList
         {
             get { return product_list; }
         }
@@ -105,7 +105,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             Order clonedOrder = new Order(this.BuyerDetails);
 
             // Clone the product list
-            clonedOrder.product_list = new ArrayList(this.product_list);
+            clonedOrder.product_list = new List<Product>(this.product_list);
 
             clonedOrder.total_price = this.total_price;
 
@@ -124,7 +124,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return OrderID == other.OrderID &&
                    TotalPrice == other.TotalPrice &&
                    BuyerDetails.Equals(other.BuyerDetails) &&
-                   ProductList.Cast<Product>().SequenceEqual(other.ProductList.Cast<Product>());
+                   ProductList.SequenceEqual(other.ProductList);
         }
 
         public override string ToString()
@@ -140,6 +140,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
             result.AppendLine($"Total Price: {TotalPrice}");
             return result.ToString();
+        }
+        public override int GetHashCode()
+        {
+            return Tuple.Create(product_list, total_price, buyer_details).GetHashCode();
         }
 
     }

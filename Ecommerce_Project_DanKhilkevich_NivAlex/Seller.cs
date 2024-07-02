@@ -9,29 +9,29 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
     internal class Seller : User, IComparable<Seller>
     {
-        private ArrayList seller_products; // Using ArrayList instead of Product[]
+        private List<Product> seller_products; // Using List<Product> 
         private int logical_size = 0;
 
-        // seller constructor
+        // Seller constructor
         public Seller() : base()
         {
-            // Initialize the seller products ArrayList
-            SellerProducts = new ArrayList();
+            // Initialize the seller products List<Product>
+            SellerProducts = new List<Product>();
         }
 
         // Constructor to initialize the seller properties
         public Seller(string seller_username, string seller_password, Address seller_address) : base(seller_username, seller_password, seller_address)
         {
-            SellerProducts = new ArrayList();
+            SellerProducts = new List<Product>();
         }
 
         public Seller(Seller other) : base(other.Username, other.Password, other.Address) // copy constructor
         {
-            SellerProducts = new ArrayList(other.SellerProducts);
+            SellerProducts = new List<Product>(other.SellerProducts);
             LogicalSize = other.LogicalSize;
         }
 
-        public ArrayList SellerProducts
+        public List<Product> SellerProducts
         {
             get { return seller_products; }
             private set
@@ -53,25 +53,20 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        // function to get the list of products
+        // Function to get the list of products
         public Product[] GetSellerProductList()
         {
-            Product[] products = new Product[LogicalSize];
-            SellerProducts.CopyTo(products, 0);
-            return products;
+            return SellerProducts.Take(LogicalSize).ToArray();
         }
 
-        // function to add a product to the seller's product list
+        // Function to add a product to the seller's product list
         public void AddToProductList(Product product)
         {
             // Check if the product already exists in the seller's product list
-            foreach (Product existingProduct in SellerProducts)
+            if (SellerProducts.Any(existingProduct => existingProduct != null && existingProduct.Equals(product)))
             {
-                if (existingProduct != null && existingProduct.Equals(product))
-                {
-                    Console.WriteLine("Product already exists in the seller's product list.");
-                    return;
-                }
+                Console.WriteLine("Product already exists in the seller's product list.");
+                return;
             }
 
             // Add the product to the seller's product list
@@ -82,31 +77,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public bool SearchProductIfItExists(string name_of_product_to_find)
         {
-            if (SellerProducts == null)
-            {
-                return false;
-            }
-
-            foreach (Product product in SellerProducts)
-            {
-                if (product != null && product.ProductName == name_of_product_to_find)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return SellerProducts.Any(product => product != null && product.ProductName == name_of_product_to_find);
         }
 
         public Product FindProductByName(string productName)
         {
-            foreach (Product product in SellerProducts)
-            {
-                if (product != null && product.ProductName.Equals(productName))
-                {
-                    return product;
-                }
-            }
-            return null; // Product not found
+            return SellerProducts.FirstOrDefault(product => product != null && product.ProductName.Equals(productName));
         }
 
         public void PrintSellerProducts()
@@ -139,12 +115,17 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return Username.Equals(other.Username) &&
                    Password.Equals(other.Password) &&
                    Address.Equals(other.Address) &&
-                   SellerProducts.Cast<Product>().SequenceEqual(other.SellerProducts.Cast<Product>());
+                   SellerProducts.SequenceEqual(other.SellerProducts);
         }
+
         public int CompareTo(Seller other)
         {
             // Compare sellers based on the number of products they sell
-            return seller_products.Count.CompareTo(other.seller_products.Count);
+            return SellerProducts.Count.CompareTo(other.SellerProducts.Count);
+        }
+        public override int GetHashCode()
+        {
+            return Tuple.Create(base.GetHashCode(), seller_products).GetHashCode();
         }
 
     }

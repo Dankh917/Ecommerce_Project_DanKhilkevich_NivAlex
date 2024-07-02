@@ -11,22 +11,22 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
     internal class Buyer : User
     {
-        private ArrayList shopping_cart; // Using ArrayList instead of Product[]
-        private ArrayList past_purchases;
+        private List<Product> shopping_cart; // Using List<Product>
+        private List<Order> past_purchases;
 
         public Buyer(string buyer_username, string buyer_password, Address buyer_address) : base(buyer_username, buyer_password, buyer_address) //buyer constructor
         {
-            ShoppingCart = new ArrayList(); // Initialize as an empty ArrayList
-            PastPurchases = new ArrayList(); // Initialize as an empty ArrayList
+            ShoppingCart = new List<Product>(); // Initialize as an empty List<Product>
+            PastPurchases = new List<Order>(); // Initialize as an empty List<Order>
         }
 
         public Buyer(Buyer other) : base(other.Username, other.Password, other.Address) //copy constructor
         {
-            ShoppingCart = new ArrayList(other.ShoppingCart);
-            PastPurchases = new ArrayList(other.PastPurchases);
+            ShoppingCart = new List<Product>(other.ShoppingCart);
+            PastPurchases = new List<Order>(other.PastPurchases);
         }
 
-        public ArrayList ShoppingCart
+        public List<Product> ShoppingCart
         {
             get { return shopping_cart; }
             private set
@@ -37,7 +37,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        public ArrayList PastPurchases
+        public List<Order> PastPurchases
         {
             get { return past_purchases; }
             private set
@@ -127,6 +127,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             return totalPrice;
         }
+
         // Operator for comparing shopping cart total prices: <
         public static bool operator <(Buyer buyer1, Buyer buyer2)
         {
@@ -146,7 +147,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         private void ClearShoppingCart()
         {
-            // Clear all elements in the shopping cart ArrayList
+            // Clear all elements in the shopping cart List<Product>
             ShoppingCart.Clear();
         }
 
@@ -213,8 +214,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return Username == other.Username &&
                    Password == other.Password &&
                    Address.Equals(other.Address) &&
-                   ShoppingCart.Cast<Product>().SequenceEqual(other.ShoppingCart.Cast<Product>()) &&
-                   PastPurchases.Cast<Order>().SequenceEqual(other.PastPurchases.Cast<Order>());
+                   ShoppingCart.SequenceEqual(other.ShoppingCart) &&
+                   PastPurchases.SequenceEqual(other.PastPurchases);
+        }
+        public override int GetHashCode()
+        {
+            return Tuple.Create(base.GetHashCode(), ShoppingCart, PastPurchases).GetHashCode();
         }
 
     }   
