@@ -9,26 +9,25 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
     internal class Seller : User, IComparable<Seller>
     {
-        private List<Product> seller_products; // Using List<Product> 
-        private int logical_size = 0;
+        private List<Product> seller_products;
 
         // Seller constructor
         public Seller() : base()
         {
-            // Initialize the seller products List<Product>
             SellerProducts = new List<Product>();
         }
 
         // Constructor to initialize the seller properties
-        public Seller(string seller_username, string seller_password, Address seller_address) : base(seller_username, seller_password, seller_address)
+        public Seller(string seller_username, string seller_password, Address seller_address)
+            : base(seller_username, seller_password, seller_address)
         {
             SellerProducts = new List<Product>();
         }
 
-        public Seller(Seller other) : base(other.Username, other.Password, other.Address) // copy constructor
+        public Seller(Seller other)
+            : base(other.Username, other.Password, other.Address) // copy constructor
         {
             SellerProducts = new List<Product>(other.SellerProducts);
-            LogicalSize = other.LogicalSize;
         }
 
         public List<Product> SellerProducts
@@ -42,21 +41,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             }
         }
 
-        public int LogicalSize
-        {
-            get { return logical_size; }
-            private set
-            {
-                if (value < 0)
-                    throw new ArgumentException("Logical size cannot be negative.");
-                logical_size = value;
-            }
-        }
-
         // Function to get the list of products
         public Product[] GetSellerProductList()
         {
-            return SellerProducts.Take(LogicalSize).ToArray();
+            return SellerProducts.ToArray();
         }
 
         // Function to add a product to the seller's product list
@@ -71,7 +59,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             // Add the product to the seller's product list
             SellerProducts.Add(product);
-            LogicalSize++;
             Console.WriteLine("Product added successfully to the seller.");
         }
 
@@ -88,18 +75,20 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public void PrintSellerProducts()
         {
             Console.WriteLine(ToString());
-            Console.WriteLine($"Logical Size: {LogicalSize}");
-            if (LogicalSize == 0)
+            if (SellerProducts.Count == 0)
             {
                 Console.WriteLine("Seller has no products.");
                 return;
             }
 
             Console.WriteLine("Seller Products:");
-            for (int i = 0; i < LogicalSize; i++)
+            foreach (var product in SellerProducts)
             {
-                Console.WriteLine($"{SellerProducts[i].ToString()}");
-                Console.WriteLine("-------------------");
+                if (product != null)
+                {
+                    Console.WriteLine($"{product.ToString()}");
+                    Console.WriteLine("-------------------");
+                }
             }
         }
 
@@ -120,9 +109,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public int CompareTo(Seller other)
         {
-            // Compare sellers based on the number of products they sell
+            // compare sellers based on the number of products they sell
             return SellerProducts.Count.CompareTo(other.SellerProducts.Count);
         }
+
         public override int GetHashCode()
         {
             return Tuple.Create(base.GetHashCode(), seller_products).GetHashCode();

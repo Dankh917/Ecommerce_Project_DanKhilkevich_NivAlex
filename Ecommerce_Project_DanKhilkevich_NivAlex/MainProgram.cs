@@ -138,7 +138,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             // Create a new Buyer object
             Buyer buyer = new Buyer(buyer_username, buyer_password, new Address(buyer_street, buyer_buildingNumber, buyer_city, buyer_country));
 
-            // Add the buyer to the store using the overloaded + operator
+            // Add the buyer to the store using the + operator
             store += buyer;
         }
 
@@ -169,79 +169,111 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             // Create a new Seller object
             Seller seller = new Seller(seller_username, seller_password, new Address(seller_street, seller_buildingNumber, seller_city, seller_country));
 
-            // Add the seller to the store using the overloaded + operator
+            // Add the seller to the store using the + operator
             store += seller;
         }
 
         private static void AddProductToSeller(EcommerceStore store)
         {
-            Console.Write("Enter seller username: ");
-            string username = Console.ReadLine();
-            Seller seller = store.FindSellerByUsername(username);
-            if (seller == null)
+            try
             {
-                Console.WriteLine("Seller not found.");
-                return;
-            }
-
-            Console.Write("Enter product name: ");
-            string productName = Console.ReadLine();
-            Console.Write("Enter product price: ");
-            int productPrice = int.Parse(Console.ReadLine());
-            Console.Write("Is it a special product? (true/false): ");
-            bool isSpecialProduct = bool.Parse(Console.ReadLine());
-            int packagingFee = 0;
-            int starsRanking = 0;
-
-            if (isSpecialProduct)
-            {
-                Console.Write("Enter packaging fee: ");
-                packagingFee = int.Parse(Console.ReadLine());
-                Console.Write("Enter the stars ranking: ");
-                starsRanking = int.Parse(Console.ReadLine());
-            }
-
-            bool validCategory = false;
-            Product.ProductCategory category = 0;
-
-            while (!validCategory)
-            {
-                Console.WriteLine("Enter category of product:");
-                Console.Write("1 for Kids, 2 for Electricity, 3 for Office, 4 for Clothing: ");
-                if (Enum.TryParse(Console.ReadLine(), out category) && Enum.IsDefined(typeof(Product.ProductCategory), category))
+                Console.Write("Enter seller username: ");
+                string username = Console.ReadLine();
+                Seller seller = store.FindSellerByUsername(username);
+                if (seller == null)
                 {
-                    validCategory = true; // Set validCategory to true to exit the loop
+                    Console.WriteLine("Seller not found.");
+                    return;
                 }
-                else
+
+                Console.Write("Enter product name: ");
+                string productName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(productName) || productName.Any(char.IsDigit))
                 {
-                    Console.WriteLine("Invalid category. Please enter a valid category number.");
+                    throw new ArgumentException("Product name cannot be null, empty, or contain numbers.");
+                }
+
+                Console.Write("Enter product price: ");
+                if (!int.TryParse(Console.ReadLine(), out int productPrice))
+                {
+                    throw new ArgumentException("Product price must be a valid integer.");
+                }
+
+                Console.Write("Is it a special product? (true/false): ");
+                if (!bool.TryParse(Console.ReadLine(), out bool isSpecialProduct))
+                {
+                    throw new ArgumentException("Invalid input for special product. Please enter 'true' or 'false'.");
+                }
+
+                int packagingFee = 0;
+                int starsRanking = 0;
+
+                if (isSpecialProduct)
+                {
+                    Console.Write("Enter packaging fee: ");
+                    if (!int.TryParse(Console.ReadLine(), out packagingFee))
+                    {
+                        throw new ArgumentException("Packaging fee must be a valid integer.");
+                    }
+
+                    Console.Write("Enter the stars ranking (1-5): ");
+                    if (!int.TryParse(Console.ReadLine(), out starsRanking) || starsRanking < 1 || starsRanking > 5)
+                    {
+                        throw new ArgumentException("Stars ranking must be a valid integer between 1 and 5.");
+                    }
+                }
+
+                bool validCategory = false;
+                Product.ProductCategory category = 0;
+
+                while (!validCategory)
+                {
+                    Console.WriteLine("Enter category of product:");
+                    Console.Write("1 for Kids, 2 for Electricity, 3 for Office, 4 for Clothing: ");
+                    if (Enum.TryParse(Console.ReadLine(), out category) && Enum.IsDefined(typeof(Product.ProductCategory), category))
+                    {
+                        validCategory = true; // Set validCategory to true to exit the loop
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid category. Please enter a valid category number.");
+                    }
+                }
+
+                // check if the product that we want to add is already exists in the seller products list.
+                // same product is defined to be a product with the same: Name, Price, Category, and Special Status.
+                bool productExists = seller.GetSellerProductList().Any(p =>
+                    p.ProductName.Equals(productName, StringComparison.OrdinalIgnoreCase) &&
+                    p.ProductPrice == productPrice &&
+                    p.CategoryOfProduct == category &&
+                    ((p is SpecialProduct sp && isSpecialProduct && sp.PackagingFee == packagingFee && sp.StarsRanking == starsRanking) ||
+                     (!(p is SpecialProduct) && !isSpecialProduct)));
+
+                if (productExists)
+                {
+                    Console.WriteLine("Product with the same name, price, category, and special status already exists for this seller.");
+                    return;
+                }
+
+                // Add the product to the seller's list
+                if (isSpecialProduct) // add special product
+                {
+                    SpecialProduct specialProduct = new SpecialProduct(productName, productPrice, category, starsRanking, packagingFee);
+                    store.AddProductToSeller(username, specialProduct);
+                }
+                else // add regular product
+                {
+                    Product product = new Product(productName, productPrice, category);
+                    store.AddProductToSeller(username, product);
                 }
             }
-
-            bool productExists = seller.GetSellerProductList().Any(p =>
-                p.ProductName.Equals(productName, StringComparison.OrdinalIgnoreCase) &&
-                p.ProductPrice == productPrice &&
-                p.CategoryOfProduct == category &&
-                ((p is SpecialProduct sp && isSpecialProduct && sp.PackagingFee == packagingFee && sp.StarsRanking == starsRanking) ||
-                 (!(p is SpecialProduct) && !isSpecialProduct)));
-
-            if (productExists)
+            catch (ArgumentException ex)
             {
-                Console.WriteLine("Product with the same name, price, category, and special status already exists for this seller.");
-                return;
+                Console.WriteLine($"Input error: {ex.Message}");
             }
-
-            // Add the product to the seller's list
-
-            if (isSpecialProduct) // add special product 
+            catch (Exception ex)
             {
-                SpecialProduct specialProduct = new SpecialProduct(productName, productPrice, category, starsRanking, packagingFee);
-                store.AddProductToSeller(username, specialProduct);
-            }
-            else // add regular product
-            {
-                Product product = new Product(productName, productPrice, category);
-                store.AddProductToSeller(username, product);
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
         }
 
@@ -294,10 +326,10 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             try
             {
-                Console.WriteLine("Enter the name of the first buyer:");
+                Console.Write("Enter the name of the first buyer:");
                 string buyerName1 = Console.ReadLine();
 
-                Console.WriteLine("Enter the name of the second buyer:");
+                Console.Write("Enter the name of the second buyer:");
                 string buyerName2 = Console.ReadLine();
 
                 store.CompareBuyers(buyerName1, buyerName2);

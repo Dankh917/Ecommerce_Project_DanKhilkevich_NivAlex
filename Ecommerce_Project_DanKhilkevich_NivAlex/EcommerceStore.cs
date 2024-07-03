@@ -12,12 +12,12 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
     internal class EcommerceStore
     {
         private string name;
-        private List<User> usersList; // Use List<User> for the users list
+        private List<User> usersList;
 
-        public EcommerceStore(string name) // EcommerceStore constructor
+        public EcommerceStore(string name)
         {
             this.name = name;
-            usersList = new List<User>(); // Initialize the List<User>
+            usersList = new List<User>();
         }
 
         public List<User> UsersList
@@ -108,7 +108,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         public void PrintUsersArrayDetails()
         {
             Console.WriteLine("Users array details:");
-            Console.WriteLine($"Logical Size: {usersList.Count}");
             foreach (User user in usersList)
             {
                 if (user != null)
@@ -139,7 +138,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             Console.WriteLine("Sellers array Details:");
 
-            // Sort sellers based on the number of products they sell
+            // Sort the sellers array based on the number of products they sell
             List<Seller> sellersList = usersList.OfType<Seller>().OrderByDescending(s => s.SellerProducts.Count).ToList();
 
             // Print sorted sellers details
@@ -333,27 +332,21 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             if (buyer1 == null || buyer2 == null)
             {
-                Console.WriteLine("Buyer not found.");
-                return;
+                throw new ArgumentException("One or both of the buyers was not found");
             }
-
-            int totalPriceBuyer1 = buyer1.CalculateTotalPrice();
-            int totalPriceBuyer2 = buyer2.CalculateTotalPrice();
-
-            Console.WriteLine($"Total price in {buyer1.Username}'s shopping cart: {totalPriceBuyer1}");
-            Console.WriteLine($"Total price in {buyer2.Username}'s shopping cart: {totalPriceBuyer2}");
-
-            if (totalPriceBuyer1 > totalPriceBuyer2)
+            Console.WriteLine($"Total price in {buyer1.Username}'s shopping cart: {buyer1.CalculateTotalPrice()}");
+            Console.WriteLine($"Total price in {buyer2.Username}'s shopping cart: {buyer2.CalculateTotalPrice()}");
+            if (buyer1 > buyer2)
             {
-                Console.WriteLine($"{buyer1.Username} has a bigger shopping cart total than {buyer2.Username}.");
+                Console.WriteLine($"{buyer1.Username} has a higher total price in his shopping cart than {buyer2.Username}.");
             }
-            else if (totalPriceBuyer1 < totalPriceBuyer2)
+            else if (buyer1 < buyer2)
             {
-                Console.WriteLine($"{buyer2.Username} has a bigger shopping cart total than {buyer1.Username}.");
+                Console.WriteLine($"{buyer2.Username} has a higher total price in his shopping cart than {buyer1.Username}.");
             }
             else
             {
-                Console.WriteLine($"Both {buyer1.Username} and {buyer2.Username} have the same total price in their shopping carts.");
+                Console.WriteLine($"{buyer1.Username} and {buyer2.Username} have the same total price in their shopping carts.");
             }
         }
 
@@ -362,7 +355,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return $"Store Name: {name}\nTotal Users: {usersList.Count}";
         }
 
-        // Private helper functions used only in this class
+
+        // Private functions used only in this class
         private bool IsUserAlreadyExists(string username)
         {
             foreach (User user in usersList)

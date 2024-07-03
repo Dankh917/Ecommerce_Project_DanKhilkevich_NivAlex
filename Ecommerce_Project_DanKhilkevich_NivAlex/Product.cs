@@ -11,7 +11,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
     internal class Product
     {
-        private static int product_id_number = 0; // static property for the product IDs
+        private static int product_id_number = 0;
         private int product_id;
         private string product_name;
         private int product_price;
@@ -27,16 +27,16 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
         public Product(string product_name, int product_price, ProductCategory category_of_product) // Product constructor
         {
-            this.ProductId = GetNextProductId(); // assign ID using static method
+            this.ProductId = GetNextProductId();
 
-            this.ProductName = product_name; // Use property to validate
-            this.ProductPrice = product_price; // Use property to validate
-            this.CategoryOfProduct = category_of_product; // Use property to validate
+            this.ProductName = product_name; 
+            this.ProductPrice = product_price;
+            this.CategoryOfProduct = category_of_product;
         }
 
         public Product(Product other) // Copy constructor
         {
-            this.ProductId = GetNextProductId(); // Assign ID using static method
+            this.ProductId = GetNextProductId();
             this.ProductName = other.ProductName;
             this.ProductPrice = other.ProductPrice;
             this.CategoryOfProduct = other.CategoryOfProduct;

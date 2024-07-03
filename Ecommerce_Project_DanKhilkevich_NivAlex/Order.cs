@@ -7,38 +7,38 @@ using System.Threading.Tasks;
 
 namespace Ecommerce_Project_DanKhilkevich_NivAlex
 {
+    // custom exception that we created for Single Item in Order. 
+    // order can not contains only 1 item
     public class SingleItemOrderException : Exception
     {
-        public SingleItemOrderException() { }
-
         public SingleItemOrderException(string message) : base(message) { }
 
-        public SingleItemOrderException(string message, Exception inner) : base(message, inner) { }
     }
+
     internal class Order: ICloneable
     {
-        private static int nextOrderId = 1; // Static field to track the next order ID
-        private int orderId; // Instance field for the order ID
-        private List<Product> product_list; // Use List<Product>
+        private static int nextOrderId = 1;
+        private int orderId;
+        private List<Product> product_list; 
         private int total_price;
         private Buyer buyer_details;
 
         public Order(Buyer buyer_details) // Order constructor
         {
-            this.orderId = GetNextOrderId(); // Assign the next available order ID
+            this.orderId = GetNextOrderId();
             BuyerDetails = buyer_details;
             product_list = new List<Product>();
             total_price = 0;
         }
 
-        public int OrderID // Public property for accessing the order ID
+        public int OrderID
         {
             get { return orderId; }
         }
 
         private static int GetNextOrderId()
         {
-            return nextOrderId++; // Increment and return the next order ID
+            return nextOrderId++;
         }
 
         public Buyer BuyerDetails

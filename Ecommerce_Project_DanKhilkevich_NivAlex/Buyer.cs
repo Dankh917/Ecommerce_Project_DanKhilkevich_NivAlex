@@ -11,13 +11,13 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
     internal class Buyer : User
     {
-        private List<Product> shopping_cart; // Using List<Product>
+        private List<Product> shopping_cart;
         private List<Order> past_purchases;
 
         public Buyer(string buyer_username, string buyer_password, Address buyer_address) : base(buyer_username, buyer_password, buyer_address) //buyer constructor
         {
-            ShoppingCart = new List<Product>(); // Initialize as an empty List<Product>
-            PastPurchases = new List<Order>(); // Initialize as an empty List<Order>
+            ShoppingCart = new List<Product>();
+            PastPurchases = new List<Order>();
         }
 
         public Buyer(Buyer other) : base(other.Username, other.Password, other.Address) //copy constructor
@@ -54,21 +54,17 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             ShoppingCart.Add(product);
         }
 
-        // BuyTheShoppingCart function create new order from current products list, add it to PastPurchases and clear the ShoppingCart 
+        // BuyTheShoppingCart function create new order from current products list, add this order to PastPurchases and clear the ShoppingCart 
         public void BuyTheShoppingCart()
         {
-            if (ShoppingCart.Count <= 1)
+            if (ShoppingCart.Count <= 1) // if ShoppingCart has more less then 2 products
             {
-                Console.WriteLine("Cannot create order. The shopping cart must contain more than one product.");
-                return;
+                throw new SingleItemOrderException("Cannot create order. The shopping cart must contain more than one product.");
             }
-
-            //need to del code below me and improve code above me to throw an execption
 
             try
             {
-                // Create a new order
-                Order currOrder = new Order(this); // Pass the buyer details to the order constructor
+                Order currOrder = new Order(this); 
 
                 // Add all products from the shopping cart to the order
                 foreach (Product product in ShoppingCart)
@@ -95,10 +91,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             try
             {
-                // Validate the order to ensure it has more than one product
                 currOrder.ValidateOrder();
-
-                // Add the validated order to the buyer's PastPurchases
                 AddOrderToPastPurchases(currOrder);
                 Console.WriteLine("Order bought successfully.");
             }
@@ -112,7 +105,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         {
             int totalPrice = 0;
 
-            // Iterate over the shopping cart and sum up the prices of all products
+            // iterate over the shopping cart and sum up the prices of all products
             foreach (Product product in ShoppingCart)
             {
                 if (product != null)
@@ -128,27 +121,16 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return totalPrice;
         }
 
-        // Operator for comparing shopping cart total prices: <
+        // operator that comparing shopping cart total prices: <
         public static bool operator <(Buyer buyer1, Buyer buyer2)
         {
             return buyer1.CalculateTotalPrice() < buyer2.CalculateTotalPrice();
         }
 
-        // Operator for comparing shopping cart total prices: >
+        // Operator that comparing shopping cart total prices: >
         public static bool operator >(Buyer buyer1, Buyer buyer2)
         {
             return buyer1.CalculateTotalPrice() > buyer2.CalculateTotalPrice();
-        }
-
-        private void AddOrderToPastPurchases(Order order)
-        {
-            PastPurchases.Add(order);
-        }
-
-        private void ClearShoppingCart()
-        {
-            // Clear all elements in the shopping cart List<Product>
-            ShoppingCart.Clear();
         }
 
         public Order FindOrderById(int orderId)
@@ -160,9 +142,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     return order;
                 }
             }
-            return null; // Order not found
+            return null;
         }
-
         public void PrintCurrentShoppingCart()
         {
             Console.WriteLine("Shopping Cart Contents:");
@@ -188,7 +169,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 Console.WriteLine($"Order id: {order.OrderID}");
                 Console.WriteLine("Buyer Details:");
-                Console.WriteLine(order.BuyerDetails.ToString()); // Using UserToString from User class
+                Console.WriteLine(order.BuyerDetails.ToString());
                 Console.WriteLine("Products list:");
 
                 foreach (Product product in order.ProductList)
@@ -222,6 +203,18 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             return Tuple.Create(base.GetHashCode(), ShoppingCart, PastPurchases).GetHashCode();
         }
 
-    }   
+        // private functions that used only in this class
+        private void AddOrderToPastPurchases(Order order)
+        {
+            PastPurchases.Add(order);
+        }
+
+        private void ClearShoppingCart()
+        {
+            ShoppingCart.Clear();
+        }
+
+
+    }
 
 }

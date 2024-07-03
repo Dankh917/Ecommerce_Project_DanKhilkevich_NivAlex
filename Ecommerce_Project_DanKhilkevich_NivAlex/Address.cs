@@ -14,7 +14,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         private string city_name;
         private string country_name;
 
-        public Address(string street_name, int number_of_building, string city_name, string country_name) // address constructor
+        public Address(string street_name, int number_of_building, string city_name, string country_name) // Address constructor
         {
             StreetName = street_name;
             NumberOfBuilding = number_of_building;
@@ -59,7 +59,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                     throw new ArgumentException("Number of building must be greater than zero.", nameof(NumberOfBuilding));
                 }
 
-                // Check if the value is a string
                 if (value.GetType() == typeof(string))
                 {
                     throw new ArgumentException("Number of building cannot be a string.", nameof(NumberOfBuilding));
@@ -74,8 +73,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             get { return city_name; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$"))
-                    throw new ArgumentException("City name can not be null and only contain letters and spaces.");
+                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$")) //city name can not contains special characters
+                    throw new ArgumentException("City name can not be null and can only contain letters and spaces.");
                 city_name = value;
             }
         }
@@ -85,24 +84,24 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             get { return country_name; }
             set
             {
-                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$"))
-                    throw new ArgumentException("Country name can not be null and only contain letters and spaces.");
+                if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, @"^[a-zA-Z\s]+$")) // country name can not contains special characters
+                    throw new ArgumentException("Country name can not be null and can only contain letters and spaces.");
                 country_name = value;
             }
         }
 
         public override bool Equals(object obj)
         {
-            // Check if the object is null or not of the correct type
+            // check if the object is null or not of the correct type
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
 
-            // Casting the object to an Address
+            // casting the object to an Address
             Address other = (Address)obj;
 
-            // Compare the address's street name, number of building, city name, and country name
+            // compare the address's street name, number of building, city name, and country name
             return StreetName == other.StreetName &&
                    NumberOfBuilding == other.NumberOfBuilding &&
                    CityName == other.CityName &&

@@ -12,6 +12,14 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         protected string password;
         protected Address address;
 
+        public User() { }
+
+        public User(string username, string password, Address address)
+        {
+            Username = username;
+            Password = password;
+            Address = address;
+        }
         public string Username
         {
             get { return username; }
@@ -55,15 +63,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 }
                 address = value;
             }
-        }
-
-        public User() { }
-
-        public User(string username, string password, Address address)
-        {
-            Username = username;
-            Password = password;
-            Address = address;
         }
 
         public override string ToString()
