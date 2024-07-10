@@ -59,7 +59,6 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
 
             // Add the product to the seller's product list
             SellerProducts.Add(product);
-            Console.WriteLine("Product added successfully to the seller.");
         }
 
         public bool SearchProductIfItExists(string name_of_product_to_find)

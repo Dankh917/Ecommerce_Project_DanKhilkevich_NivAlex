@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,8 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
         // NIV ALEX 322822602
         static void Main(string[] args)
         {
-            EcommerceStore store = new EcommerceStore("niv and dan store"); // creating a new store
+            EcommerceStore store = new EcommerceStore("niv and dan store"); // creating a new store                                                                        
+            store.LoadSellersFromFile("sellers_data"); // Load sellers from file when the program starts
             bool exitRequested = false;
 
             while (!exitRequested)
@@ -90,6 +92,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                             CheckBuyersComparison(store);
                             break;
                         case 13:
+                            store.SaveSellersToFile("sellers_data");
                             exitRequested = true;
                             break;
 
@@ -260,11 +263,13 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 {
                     SpecialProduct specialProduct = new SpecialProduct(productName, productPrice, category, starsRanking, packagingFee);
                     store.AddProductToSeller(username, specialProduct);
+                    Console.WriteLine("Product added successfully to the seller.");
                 }
                 else // add regular product
                 {
                     Product product = new Product(productName, productPrice, category);
                     store.AddProductToSeller(username, product);
+                    Console.WriteLine("Product added successfully to the seller.");
                 }
             }
             catch (ArgumentException ex)
@@ -339,6 +344,7 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
                 Console.WriteLine($"An error occurred while comparing buyers: {ex.Message}");
             }
         }
+      
 
     }
 }

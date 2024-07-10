@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -348,6 +349,172 @@ namespace Ecommerce_Project_DanKhilkevich_NivAlex
             {
                 Console.WriteLine($"{buyer1.Username} and {buyer2.Username} have the same total price in their shopping carts.");
             }
+        }
+
+        // Saves sellers to a file
+        public void SaveSellersToFile(string fileName)
+        {
+            string TXTfilePath = Path.Combine(Directory.GetCurrentDirectory(), fileName + ".txt");
+
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(TXTfilePath))
+                {
+                    foreach (var user in usersList)
+                    {
+                        if (user is Seller seller)
+                        {
+                            // Write basic seller information
+                            sw.WriteLine($"Username: {seller.Username}, password: {seller.Password}, Address: {seller.Address}, Number of Products: {seller.SellerProducts.Count}");
+
+                            // Iterate over each product in the seller's product list
+                            foreach (var product in seller.SellerProducts)
+                            {
+                                // Construct product line with common details
+                                StringBuilder productLine = new StringBuilder();
+                                productLine.Append($"  - Product Name: {product.ProductName}, ");
+                                productLine.Append($"Product ID: {product.ProductId}, ");
+                                productLine.Append($"Price: {product.ProductPrice}, ");
+                                productLine.Append($"Type: {product.GetType().Name}, "); // Get the type name
+                                productLine.Append($"Category: {product.CategoryOfProduct}");
+
+                                // Check if the product is special
+                                if (product is SpecialProduct specialProduct)
+                                {
+                                    productLine.Append($", Packaging Fee: {specialProduct.PackagingFee}, ");
+                                    productLine.Append($"Stars Ranking: {specialProduct.StarsRanking}");
+                                }
+
+                                // Write the constructed product line to the file
+                                sw.WriteLine(productLine.ToString());
+                            }
+
+                            // Add an empty line between sellers for readability
+                            sw.WriteLine();
+                        }
+                    }
+                    sw.Close();
+                }
+
+                Console.WriteLine($"Sellers' data saved to the file: {TXTfilePath}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Error saving sellers' data: {ex.Message}");
+            }
+        }
+        public void LoadSellersFromFile(string fileName)
+        {
+            string TXTfilePath = Path.Combine(Directory.GetCurrentDirectory(), fileName + ".txt");
+
+            try
+            {
+                using (StreamReader sr = new StreamReader(TXTfilePath))
+                {
+                    string line;
+                    Seller currentSeller = null;
+
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (line.StartsWith("Username:"))
+                        {
+                            // Extract seller information
+                            string[] sellerInfo = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            string username = sellerInfo[0].Split(':')[1].Trim();
+                            string password = sellerInfo[1].Split(':')[1].Trim();
+                            string addressLine = string.Join(",", sellerInfo.Skip(2)).Trim();
+
+                            // Parse address details
+                            string streetName = ParseAddressComponent(addressLine, "Street Name:");
+                            int buildingNumber = ParseAddressComponentAsInt(addressLine, "Number of Building:");
+                            string cityName = ParseAddressComponent(addressLine, "City:");
+                            string countryName = ParseAddressComponent(addressLine, "Country:");
+
+                            // Create address instance
+                            Address sellerAddress = new Address(streetName, buildingNumber, cityName, countryName);
+
+                            int numberOfProducts = int.Parse(sellerInfo[sellerInfo.Length - 1].Split(':')[1].Trim());
+
+                            // Create a new seller instance
+                            currentSeller = new Seller(username, password, sellerAddress);
+
+                            // Add the seller to the store if not already added
+                            if (!IsUserAlreadyExists(username))
+                            {
+                                AddUserToStore(currentSeller);
+                            }
+                        }
+                        else if (line.StartsWith("  - Product Name:"))
+                        {
+                            // Extract product information
+                            string[] productInfo = line.Trim().Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+                            string productName = productInfo[0].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                            int productId = int.Parse(productInfo[1].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                            int productPrice = int.Parse(productInfo[2].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1]); // Assuming productPrice is an int
+                            string productType = productInfo[3].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1];
+                            string productCategoryStr = productInfo[4].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1];
+
+                            // Parse the product category
+                            if (!Enum.TryParse(productCategoryStr, out Product.ProductCategory productCategory))
+                            {
+                                // Default category if parsing fails
+                                productCategory = Product.ProductCategory.Electricity;
+                            }
+
+                            // Check if the product is special
+                            if (productInfo.Length > 5 && productInfo[5].StartsWith("Packaging Fee"))
+                            {
+                                int packagingFee = int.Parse(productInfo[5].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                                int starsRanking = int.Parse(productInfo[6].Split(new string[] { ": " }, StringSplitOptions.RemoveEmptyEntries)[1]);
+
+                                // Create SpecialProduct instance
+                                SpecialProduct specialProduct = new SpecialProduct(productName, productPrice, productCategory, starsRanking, packagingFee);
+                                currentSeller.AddToProductList(specialProduct);
+                            }
+                            else
+                            {
+                                // Create Product instance
+                                Product regularProduct = new Product(productName, productPrice, productCategory);
+                                currentSeller.AddToProductList(regularProduct);
+                            }
+                        }
+                        else if (line == "")
+                        {
+                            // End of seller's products section, reset currentSeller
+                            currentSeller = null;
+                        }
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Error loading sellers' data: {ex.Message}");
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"Error parsing data from file: {ex.Message}");
+            }
+        }
+
+        private string ParseAddressComponent(string addressLine, string componentKey)
+        {
+            string componentValue = "";
+            if (addressLine.Contains(componentKey))
+            {
+                componentValue = addressLine.Split(new string[] { componentKey }, StringSplitOptions.None)[1].Split(',')[0].Trim();
+            }
+            return componentValue;
+        }
+
+        private int ParseAddressComponentAsInt(string addressLine, string componentKey)
+        {
+            int componentValue = 0;
+            if (addressLine.Contains(componentKey))
+            {
+                string componentString = addressLine.Split(new string[] { componentKey }, StringSplitOptions.None)[1].Split(',')[0].Trim();
+                int.TryParse(componentString, out componentValue);
+            }
+            return componentValue;
         }
 
         public override string ToString()
