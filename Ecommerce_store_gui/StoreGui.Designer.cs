@@ -183,7 +183,7 @@
             // 
             // btnAddProductToSellerOption
             // 
-            this.btnAddProductToSellerOption.Location = new System.Drawing.Point(990, 181);
+            this.btnAddProductToSellerOption.Location = new System.Drawing.Point(904, 181);
             this.btnAddProductToSellerOption.Name = "btnAddProductToSellerOption";
             this.btnAddProductToSellerOption.Size = new System.Drawing.Size(119, 101);
             this.btnAddProductToSellerOption.TabIndex = 3;
@@ -193,7 +193,7 @@
             // 
             // btnAddProductToBuyerOption
             // 
-            this.btnAddProductToBuyerOption.Location = new System.Drawing.Point(1335, 181);
+            this.btnAddProductToBuyerOption.Location = new System.Drawing.Point(1299, 181);
             this.btnAddProductToBuyerOption.Name = "btnAddProductToBuyerOption";
             this.btnAddProductToBuyerOption.Size = new System.Drawing.Size(115, 101);
             this.btnAddProductToBuyerOption.TabIndex = 4;
@@ -203,7 +203,7 @@
             // 
             // btnShowStoreDataOption
             // 
-            this.btnShowStoreDataOption.Location = new System.Drawing.Point(1588, 775);
+            this.btnShowStoreDataOption.Location = new System.Drawing.Point(1552, 771);
             this.btnShowStoreDataOption.Name = "btnShowStoreDataOption";
             this.btnShowStoreDataOption.Size = new System.Drawing.Size(108, 105);
             this.btnShowStoreDataOption.TabIndex = 5;
@@ -522,7 +522,7 @@
             this.gpAddProductToSeller.Controls.Add(this.txtSellerToaddProductUserName);
             this.gpAddProductToSeller.Controls.Add(this.label20);
             this.gpAddProductToSeller.Controls.Add(this.label21);
-            this.gpAddProductToSeller.Location = new System.Drawing.Point(885, 296);
+            this.gpAddProductToSeller.Location = new System.Drawing.Point(846, 296);
             this.gpAddProductToSeller.Name = "gpAddProductToSeller";
             this.gpAddProductToSeller.Size = new System.Drawing.Size(308, 506);
             this.gpAddProductToSeller.TabIndex = 13;
@@ -686,9 +686,9 @@
             this.gpAddProductToBuyer.Controls.Add(this.txtBuyerToAddName);
             this.gpAddProductToBuyer.Controls.Add(this.label16);
             this.gpAddProductToBuyer.Controls.Add(this.groupBox2);
-            this.gpAddProductToBuyer.Location = new System.Drawing.Point(1272, 296);
+            this.gpAddProductToBuyer.Location = new System.Drawing.Point(1236, 296);
             this.gpAddProductToBuyer.Name = "gpAddProductToBuyer";
-            this.gpAddProductToBuyer.Size = new System.Drawing.Size(301, 478);
+            this.gpAddProductToBuyer.Size = new System.Drawing.Size(301, 506);
             this.gpAddProductToBuyer.TabIndex = 14;
             this.gpAddProductToBuyer.TabStop = false;
             this.gpAddProductToBuyer.Text = "Add Product ToBuyer";
@@ -933,7 +933,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(1713, 898);
+            this.ClientSize = new System.Drawing.Size(1673, 888);
             this.Controls.Add(this.gpAddBuyer);
             this.Controls.Add(this.gpAddProductToBuyer);
             this.Controls.Add(this.gpAddProductToSeller);
