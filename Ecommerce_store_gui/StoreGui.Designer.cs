@@ -155,7 +155,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MS Reference Sans Serif", 70F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(744, 9);
+            this.label1.Location = new System.Drawing.Point(482, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(884, 116);
             this.label1.TabIndex = 0;
@@ -163,9 +163,9 @@
             // 
             // btnAddSellerOption
             // 
-            this.btnAddSellerOption.Location = new System.Drawing.Point(75, 161);
+            this.btnAddSellerOption.Location = new System.Drawing.Point(109, 181);
             this.btnAddSellerOption.Name = "btnAddSellerOption";
-            this.btnAddSellerOption.Size = new System.Drawing.Size(237, 101);
+            this.btnAddSellerOption.Size = new System.Drawing.Size(114, 101);
             this.btnAddSellerOption.TabIndex = 1;
             this.btnAddSellerOption.Text = "Add Seller";
             this.btnAddSellerOption.UseVisualStyleBackColor = true;
@@ -173,9 +173,9 @@
             // 
             // btnAddByuerOption
             // 
-            this.btnAddByuerOption.Location = new System.Drawing.Point(495, 161);
+            this.btnAddByuerOption.Location = new System.Drawing.Point(527, 181);
             this.btnAddByuerOption.Name = "btnAddByuerOption";
-            this.btnAddByuerOption.Size = new System.Drawing.Size(237, 101);
+            this.btnAddByuerOption.Size = new System.Drawing.Size(119, 101);
             this.btnAddByuerOption.TabIndex = 2;
             this.btnAddByuerOption.Text = "Add Buyer";
             this.btnAddByuerOption.UseVisualStyleBackColor = true;
@@ -183,9 +183,9 @@
             // 
             // btnAddProductToSellerOption
             // 
-            this.btnAddProductToSellerOption.Location = new System.Drawing.Point(924, 161);
+            this.btnAddProductToSellerOption.Location = new System.Drawing.Point(990, 181);
             this.btnAddProductToSellerOption.Name = "btnAddProductToSellerOption";
-            this.btnAddProductToSellerOption.Size = new System.Drawing.Size(237, 101);
+            this.btnAddProductToSellerOption.Size = new System.Drawing.Size(119, 101);
             this.btnAddProductToSellerOption.TabIndex = 3;
             this.btnAddProductToSellerOption.Text = "Add Product To Seller";
             this.btnAddProductToSellerOption.UseVisualStyleBackColor = true;
@@ -193,9 +193,9 @@
             // 
             // btnAddProductToBuyerOption
             // 
-            this.btnAddProductToBuyerOption.Location = new System.Drawing.Point(1350, 161);
+            this.btnAddProductToBuyerOption.Location = new System.Drawing.Point(1335, 181);
             this.btnAddProductToBuyerOption.Name = "btnAddProductToBuyerOption";
-            this.btnAddProductToBuyerOption.Size = new System.Drawing.Size(237, 101);
+            this.btnAddProductToBuyerOption.Size = new System.Drawing.Size(115, 101);
             this.btnAddProductToBuyerOption.TabIndex = 4;
             this.btnAddProductToBuyerOption.Text = "Add Product To Buyer";
             this.btnAddProductToBuyerOption.UseVisualStyleBackColor = true;
@@ -203,9 +203,9 @@
             // 
             // btnShowStoreDataOption
             // 
-            this.btnShowStoreDataOption.Location = new System.Drawing.Point(1813, 161);
+            this.btnShowStoreDataOption.Location = new System.Drawing.Point(1588, 775);
             this.btnShowStoreDataOption.Name = "btnShowStoreDataOption";
-            this.btnShowStoreDataOption.Size = new System.Drawing.Size(237, 101);
+            this.btnShowStoreDataOption.Size = new System.Drawing.Size(108, 105);
             this.btnShowStoreDataOption.TabIndex = 5;
             this.btnShowStoreDataOption.Text = "Show Store Data";
             this.btnShowStoreDataOption.UseVisualStyleBackColor = true;
@@ -357,7 +357,7 @@
             this.gpAddBuyer.Controls.Add(this.txtBuyerUserName);
             this.gpAddBuyer.Controls.Add(this.label10);
             this.gpAddBuyer.Controls.Add(this.lblBuyerUserName);
-            this.gpAddBuyer.Location = new System.Drawing.Point(460, 296);
+            this.gpAddBuyer.Location = new System.Drawing.Point(443, 296);
             this.gpAddBuyer.Name = "gpAddBuyer";
             this.gpAddBuyer.Size = new System.Drawing.Size(301, 506);
             this.gpAddBuyer.TabIndex = 2;
@@ -522,7 +522,7 @@
             this.gpAddProductToSeller.Controls.Add(this.txtSellerToaddProductUserName);
             this.gpAddProductToSeller.Controls.Add(this.label20);
             this.gpAddProductToSeller.Controls.Add(this.label21);
-            this.gpAddProductToSeller.Location = new System.Drawing.Point(924, 296);
+            this.gpAddProductToSeller.Location = new System.Drawing.Point(885, 296);
             this.gpAddProductToSeller.Name = "gpAddProductToSeller";
             this.gpAddProductToSeller.Size = new System.Drawing.Size(308, 506);
             this.gpAddProductToSeller.TabIndex = 13;
@@ -686,7 +686,7 @@
             this.gpAddProductToBuyer.Controls.Add(this.txtBuyerToAddName);
             this.gpAddProductToBuyer.Controls.Add(this.label16);
             this.gpAddProductToBuyer.Controls.Add(this.groupBox2);
-            this.gpAddProductToBuyer.Location = new System.Drawing.Point(1327, 296);
+            this.gpAddProductToBuyer.Location = new System.Drawing.Point(1272, 296);
             this.gpAddProductToBuyer.Name = "gpAddProductToBuyer";
             this.gpAddProductToBuyer.Size = new System.Drawing.Size(301, 478);
             this.gpAddProductToBuyer.TabIndex = 14;
@@ -933,7 +933,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(2174, 1010);
+            this.ClientSize = new System.Drawing.Size(1713, 898);
             this.Controls.Add(this.gpAddBuyer);
             this.Controls.Add(this.gpAddProductToBuyer);
             this.Controls.Add(this.gpAddProductToSeller);

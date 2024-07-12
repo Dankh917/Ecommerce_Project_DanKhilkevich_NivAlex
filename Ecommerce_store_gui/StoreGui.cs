@@ -16,7 +16,6 @@ namespace Ecommerce_store_gui
         public StoreGui()
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized;
             store = new EcommerceStore("niv and dan store"); // Initialize the store instance
             store.LoadSellersFromFile("sellers_data"); // Load sellers from file
             this.FormClosing += new FormClosingEventHandler(StoreGui_FormClosing);
