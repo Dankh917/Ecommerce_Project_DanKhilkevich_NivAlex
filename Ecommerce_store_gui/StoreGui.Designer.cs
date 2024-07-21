@@ -155,7 +155,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MS Reference Sans Serif", 70F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(438, 20);
+            this.label1.Location = new System.Drawing.Point(461, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(884, 116);
             this.label1.TabIndex = 0;
@@ -203,7 +203,7 @@
             // 
             // btnShowStoreDataOption
             // 
-            this.btnShowStoreDataOption.Location = new System.Drawing.Point(1568, 791);
+            this.btnShowStoreDataOption.Location = new System.Drawing.Point(332, 45);
             this.btnShowStoreDataOption.Name = "btnShowStoreDataOption";
             this.btnShowStoreDataOption.Size = new System.Drawing.Size(93, 75);
             this.btnShowStoreDataOption.TabIndex = 5;
