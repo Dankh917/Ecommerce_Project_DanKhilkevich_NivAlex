@@ -203,9 +203,9 @@
             // 
             // btnShowStoreDataOption
             // 
-            this.btnShowStoreDataOption.Location = new System.Drawing.Point(266, 46);
+            this.btnShowStoreDataOption.Location = new System.Drawing.Point(1568, 791);
             this.btnShowStoreDataOption.Name = "btnShowStoreDataOption";
-            this.btnShowStoreDataOption.Size = new System.Drawing.Size(147, 90);
+            this.btnShowStoreDataOption.Size = new System.Drawing.Size(93, 75);
             this.btnShowStoreDataOption.TabIndex = 5;
             this.btnShowStoreDataOption.Text = "Show Store Data";
             this.btnShowStoreDataOption.UseVisualStyleBackColor = true;
