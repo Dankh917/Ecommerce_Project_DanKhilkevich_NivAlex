@@ -16,12 +16,15 @@ namespace Ecommerce_store_gui
         public StoreGui()
         {
             InitializeComponent();
-            store = new EcommerceStore("niv and dan store"); // Initialize the store instance
-            store.LoadSellersFromFile("sellers_data"); // Load sellers from file
+            store = new EcommerceStore("niv and dan store"); // initialize new store instance
+            store.LoadSellersFromFile("sellers_data"); // load the sellers from the file 'sellers_data'
             this.FormClosing += new FormClosingEventHandler(StoreGui_FormClosing);
-            // Assuming rbSpecial and rbNotSpecial are radio buttons
-            rbSpecial.CheckedChanged += new EventHandler(rbSpecial_CheckedChanged);
-            rbNotSpecial.CheckedChanged += new EventHandler(rbNotSpecial_CheckedChanged);
+            rbSpecial.CheckedChanged += new EventHandler(rbSpecial_CheckedChanged); // update the radio buttons
+            rbNotSpecial.CheckedChanged += new EventHandler(rbNotSpecial_CheckedChanged); // update the radio buttons
+        }
+        private void StoreGui_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            store.SaveSellersToFile("sellers_data"); // save sellers to file before exiting
         }
 
         private void StoreGui_Load(object sender, EventArgs e)
@@ -30,11 +33,6 @@ namespace Ecommerce_store_gui
             gpAddBuyer.Visible = false;
             gpAddProductToSeller.Visible = false;
             gpAddProductToBuyer.Visible = false;
-        }
-
-        private void StoreGui_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            store.SaveSellersToFile("sellers_data"); // Save sellers to file before exiting
         }
 
         private void btnAddSellerOption_Click(object sender, EventArgs e)
@@ -419,16 +417,16 @@ namespace Ecommerce_store_gui
 
         private void btnAddProductToBuyer_Click(object sender, EventArgs e)
         {
-            // Retrieve buyer's username and product name from input fields
+            // take buyer username and product name from input fields
             string buyerUsername = txtBuyerToAddName.Text.Trim();
             string productName = txtProductToAddToBuyerName.Text.Trim();
 
-            // Clear any previous errors
+            // clear any previous errors
             ClearErrorProviders();
 
             try
             {
-                // Check if the buyer exists
+                // check if the buyer exists
                 Buyer buyer = store.FindBuyerByUsername(buyerUsername);
                 if (buyer == null)
                 {
@@ -449,7 +447,7 @@ namespace Ecommerce_store_gui
                 // Call the method to add product to buyer's cart
                 store.AddProductToBuyersCart(buyerUsername, productName);
                 MessageBox.Show($"Product '{productName}' added to buyer '{buyerUsername}' shopping cart successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClearAddProductToBuyerForm();
+                ClearAddProductToBuyerForm(); // Clear the input fields
             }
             catch (Exception ex)
             {
@@ -459,18 +457,18 @@ namespace Ecommerce_store_gui
 
         private void ClearErrorProviders()
         {
-            // Clear all error providers
+            // Clear error providers
             errorProviderBuyerToAddName.Clear();
             errorProviderProductToAddToBuyerName.Clear();
         }
 
         private void ClearAddProductToBuyerForm()
         {
-            // Clear the input fields after successful addition
+            // clear the input fields after successful addition
             txtBuyerToAddName.Text = "";
             txtProductToAddToBuyerName.Text = "";
 
-            // Clear any error providers
+            // clear error providers
             ClearErrorProviders();
         }
 

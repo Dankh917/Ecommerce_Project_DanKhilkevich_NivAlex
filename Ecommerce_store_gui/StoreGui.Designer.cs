@@ -183,7 +183,7 @@
             // 
             // btnAddProductToSellerOption
             // 
-            this.btnAddProductToSellerOption.Location = new System.Drawing.Point(904, 181);
+            this.btnAddProductToSellerOption.Location = new System.Drawing.Point(912, 181);
             this.btnAddProductToSellerOption.Name = "btnAddProductToSellerOption";
             this.btnAddProductToSellerOption.Size = new System.Drawing.Size(119, 101);
             this.btnAddProductToSellerOption.TabIndex = 3;
