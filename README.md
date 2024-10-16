@@ -1,2 +1,2 @@
-# Ecommerce_Project_DanKhilkevich_NivAlex
-#project in C# OOP 
+#Final project for the OOP course
+#Ecommerce management and GUI
